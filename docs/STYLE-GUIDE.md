@@ -199,7 +199,7 @@ Rules:
 
 **Deadline strip.** A full-width band at the very top of every page: Orry background, white text, 16–18px. "Responses to LDP3 close on Friday 22 January 2027." plus the link "How to respond". On the home and respond pages, a small script may add "That's N days away." Without JavaScript only the date shows. After the deadline, the strip switches to "The LDP3 consultation closed on 22 January 2027."
 
-**Header.** The logo mark and the site name (Libre Caslon Text, 24px) on the left, with navigation on the right. On phones, the navigation becomes a "Menu" button that opens a simple list: a `<button aria-expanded>`, not a hamburger icon alone. Beneath the header is a 4px Orry rule.
+**Header.** The logo mark and the site name (Libre Caslon Text, 24px) on the left, with navigation on the right. On phones, the navigation becomes a "Menu" button that opens a simple list: a `<button aria-expanded>`, not a hamburger icon alone. Beneath the header is a 4px Orry rule. The header is sticky: it stays at the top of the screen as you scroll (the deadline strip above it scrolls away). It only sticks on screens at least 500px tall, so it never fills a landscape phone or a zoomed-in screen, and `scroll-padding-top` keeps focused elements and link targets clear of it (WCAG 2.2, Focus not obscured).
 
 **Logo mark.** A simplified outline of the village's street plan around the Orry, in Orry green, used at small sizes and as the favicon. Wordmark only until the name is chosen.
 

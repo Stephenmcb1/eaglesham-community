@@ -57,6 +57,28 @@ function isCurrent(href: string): boolean {
 <style>
   .site-header {
     border-bottom: 4px solid var(--colour-orry);
+    background: var(--colour-background);
+  }
+
+  /*
+    The header stays at the top of the screen as you scroll, but only on screens
+    tall enough for it not to get in the way. On a landscape phone, or when someone
+    zooms in a lot, it scrolls away as normal.
+  */
+  @media (min-height: 500px) {
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    /*
+      When the page scrolls to a link target or to the next focused element, stop
+      short of the header so it never covers it (WCAG 2.2, "Focus not obscured").
+    */
+    :global(html) {
+      scroll-padding-top: var(--space-9);
+    }
   }
 
   .header-inner {
@@ -138,8 +160,13 @@ function isCurrent(href: string): boolean {
     /* Open menu: one link per line, full width */
     .menu-button:not([hidden]) + nav {
       flex-basis: 100%;
-      margin-left: 0;
       border-top: var(--border-thin) solid var(--colour-rule);
+      /* The header is sticky, so a tall open menu scrolls inside itself */
+      max-height: 70vh;
+      overflow-y: auto;
+      /* Room inside the scrolling area so focus rings aren't cut off at the edges */
+      margin-inline: calc(-1 * var(--space-2));
+      padding-inline: var(--space-2);
     }
 
     .menu-button:not([hidden]) + nav .nav-list {
