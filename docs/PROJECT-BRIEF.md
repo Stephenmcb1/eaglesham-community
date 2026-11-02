@@ -248,7 +248,7 @@ Content lives in Markdown and YAML so committee members can edit it in GitHub's 
 | `news` | `src/content/news/*.md` | title, date, summary, sources[] |
 | `foi` | `src/content/foi/*.md` | title, reference, sentOn, dueBy, status, summary, documents[] |
 | `concerns` | `src/data/concerns.yaml` | id, issue, label, text, sites, policy, draft |
-| `glossary` | `src/data/glossary.yaml` | term, definition |
+| `glossary` | `src/data/glossary.yaml` | id, term, definition |
 
 `sources` is a list of `{ title, url, page? }` and is required for `sites`, `issues` and `news`.
 

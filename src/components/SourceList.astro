@@ -1,0 +1,35 @@
+---
+// "Sources" heading and numbered list at the end of a page (style guide §6, "Source notes").
+interface Props {
+  sources: { title: string; url: string; page?: string | number }[];
+}
+
+const { sources } = Astro.props;
+---
+
+{
+  sources.length > 0 && (
+    <section class="sources" aria-labelledby="sources-heading">
+      <h2 id="sources-heading">Sources</h2>
+      <ol>
+        {sources.map((source) => (
+          <li>
+            {/* A source with no web address yet (url: "") is shown as plain text */}
+            {source.url ? <a href={source.url}>{source.title}</a> : source.title}
+            {source.page && <>, page {source.page}</>}
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+<style>
+  .sources {
+    font-size: var(--text-sm);
+  }
+
+  li {
+    margin-bottom: var(--space-2);
+  }
+</style>

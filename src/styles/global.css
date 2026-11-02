@@ -105,6 +105,23 @@ blockquote {
   margin: 0 0 var(--space-4);
 }
 
+/* A list inside a list item doesn't need its own space below */
+li > ul,
+li > ol {
+  margin-bottom: 0;
+}
+
+/* Quotations from the plan or other official documents: the "From the plan" callout (style guide §6) */
+blockquote {
+  padding: var(--space-4) var(--space-5);
+  border-left: var(--border-callout) solid var(--colour-stone);
+  background: var(--colour-surface);
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
 /* Keep lines of text to about 65 characters */
 p,
 li,

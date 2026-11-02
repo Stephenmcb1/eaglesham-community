@@ -1,47 +1,63 @@
 # Planning terms in plain English, shown on /glossary/.
+# id: unique, kebab-case, used for links like /glossary/#green-belt. Never change once live.
 # Keep definitions to one or two sentences. TODO: committee to check before launch.
 
-- term: "LDP3 (Local Development Plan 3)"
+- id: ldp3
+  term: "LDP3 (Local Development Plan 3)"
   definition: "East Renfrewshire Council's plan for where new homes, businesses and other development can go from 2027 to 2037, and the policies used to decide planning applications."
 
-- term: "Proposed Plan"
+- id: proposed-plan
+  term: "Proposed Plan"
   definition: "The council's draft of LDP3, published for public consultation on 29 September 2026."
 
-- term: "Representation"
+- id: representation
+  term: "Representation"
   definition: "The council's word for a formal response to the Proposed Plan. It must be sent to the council during the consultation to count."
 
-- term: "NPF4 (National Planning Framework 4)"
+- id: npf4
+  term: "NPF4 (National Planning Framework 4)"
   definition: "Scotland's national planning policy, adopted in February 2023. It forms part of the development plan alongside each council's local plan."
 
-- term: "Growth area"
+- id: growth-area
+  term: "Growth area"
   definition: "The council's term for the places where LDP3 focuses new housing. In East Renfrewshire these are Barrhead, Busby, Clarkston and Eaglesham."
 
-- term: "Green belt"
+- id: green-belt
+  term: "Green belt"
   definition: "Land around towns and villages that is kept open to manage where development goes and to protect the setting of places."
 
-- term: "Greenfield"
+- id: greenfield
+  term: "Greenfield"
   definition: "Land that has not been built on before, such as farmland. It may or may not be in the green belt."
 
-- term: "Brownfield"
+- id: brownfield
+  term: "Brownfield"
   definition: "Land that has been built on or used before, such as a former works or yard."
 
-- term: "Material consideration"
+- id: material-consideration
+  term: "Material consideration"
   definition: "Something that is relevant to a planning decision, such as traffic, flooding or effects on wildlife. Things like property values or the loss of a private view usually are not."
 
-- term: "Section 75 agreement"
+- id: section-75-agreement
+  term: "Section 75 agreement"
   definition: "A legal agreement, under section 75 of the Town and Country Planning (Scotland) Act 1997, that ties a developer to obligations such as paying towards school places or road improvements."
 
-- term: "Examination"
+- id: examination
+  term: "Examination"
   definition: "After the consultation, an independent Reporter appointed by Scottish Ministers considers the issues people raised that the council has not resolved."
 
-- term: "Reporter"
+- id: reporter
+  term: "Reporter"
   definition: "An independent person appointed by Scottish Ministers, through the Planning and Environmental Appeals Division (DPEA), to examine the plan."
 
-- term: "Gate Check"
+- id: gate-check
+  term: "Gate Check"
   definition: "An independent check that the council's Evidence Report had enough information to prepare the plan. East Renfrewshire's passed in December 2024."
 
-- term: "Conservation area"
+- id: conservation-area
+  term: "Conservation area"
   definition: "An area of special architectural or historic interest, where extra planning controls protect its character. Eaglesham is often described as Scotland's first conservation village."
 
-- term: "FOI (Freedom of Information)"
+- id: foi
+  term: "FOI (Freedom of Information)"
   definition: "The right, under the Freedom of Information (Scotland) Act 2002, to ask a public body for information it holds. Environmental information is requested under separate regulations."
