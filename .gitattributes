@@ -1,0 +1,10 @@
+# Keep line endings consistent between Windows and the build server
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.woff2 binary
+*.pdf binary

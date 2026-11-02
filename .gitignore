@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+.astro/
+
+# Cloudflare local files
+.wrangler/
+.dev.vars
+
+# secrets
+.env
+.env.*
+!.env.example
+
+# logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# council documents kept for reference only (link to them, don't re-host: brief §11)
+PDF/

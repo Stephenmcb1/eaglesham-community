@@ -1,0 +1,12 @@
+// Cloudflare Workers settings. The site is plain static files, so this only says where they are.
+// https://developers.cloudflare.com/workers/static-assets/
+{
+  "name": "eaglesham-community",
+  "compatibility_date": "2026-11-02",
+  "assets": {
+    // Astro builds the site into dist/
+    "directory": "./dist",
+    // Use our own 404 page (added in Phase 1, step 9) for addresses that don't exist
+    "not_found_handling": "404-page"
+  }
+}

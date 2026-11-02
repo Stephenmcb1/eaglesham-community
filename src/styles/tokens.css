@@ -1,0 +1,105 @@
+/*
+  Design tokens for the site.
+  See docs/STYLE-GUIDE.md for what each one is for and the contrast checks.
+  Change values here, never hard-code them in components.
+*/
+
+:root {
+  /* ---------- Colour: palette ---------- */
+  --colour-paper: #ffffff;       /* page background */
+  --colour-harl: #eef2ec;        /* panels, callouts, footer */
+  --colour-whinstone: #1f2a2e;   /* text */
+  --colour-stone: #5b6a66;       /* secondary text, form borders */
+  --colour-orry: #1e5a43;        /* links, buttons, brand */
+  --colour-orry-dark: #15412f;   /* hover / pressed */
+  --colour-moss: #d5e3d0;        /* green belt on maps, light highlights */
+  --colour-red-line: #b8322a;    /* proposed site boundaries ONLY (and errors) */
+  --colour-focus: #ffdd00;       /* keyboard focus ring only */
+  --colour-rule: #c9d1cc;        /* decorative lines, table rules (not form borders) */
+
+  /* ---------- Colour: roles (use these in components) ---------- */
+  --colour-text: var(--colour-whinstone);
+  --colour-text-muted: var(--colour-stone);
+  --colour-background: var(--colour-paper);
+  --colour-surface: var(--colour-harl);
+  --colour-link: var(--colour-orry);
+  --colour-link-hover: var(--colour-orry-dark);
+  --colour-action: var(--colour-orry);
+  --colour-action-hover: var(--colour-orry-dark);
+  --colour-on-action: var(--colour-paper);
+  --colour-input-border: var(--colour-stone);
+  --colour-error: var(--colour-red-line);
+  --colour-site-boundary: var(--colour-red-line);
+  --colour-green-belt: var(--colour-moss);
+  --colour-conservation-area: var(--colour-orry);
+
+  /* ---------- Type: families ---------- */
+  --font-body: "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: "Libre Caslon Text", Georgia, "Times New Roman", serif;
+  --font-display: "Libre Caslon Display", "Libre Caslon Text", Georgia, serif;
+
+  /* ---------- Type: scale (fluid between 360px and 1280px screens) ---------- */
+  --text-sm: 1rem;                                       /* 16px: captions, sources. Minimum anywhere. */
+  --text-base: 1.125rem;                                 /* 18px: body */
+  --text-lead: 1.3125rem;                                /* 21px: intro paragraph */
+  --text-h3: 1.5rem;                                     /* 24px: Atkinson bold */
+  --text-h2: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);    /* 28 → 36px: Caslon Text */
+  --text-h1: clamp(2.25rem, 1.8rem + 1.6vw, 3rem);       /* 36 → 48px: Caslon Text */
+  --text-display: clamp(2.625rem, 1.5rem + 4vw, 4.5rem); /* 42 → 72px: Caslon Display, hero only */
+  --text-step-number: 2.25rem;                           /* 36px: numbers in step lists */
+
+  --weight-regular: 400;
+  --weight-bold: 700;
+
+  --leading-body: 1.6;
+  --leading-heading: 1.15;
+  --measure: 65ch;
+
+  /* ---------- Space (4px base) ---------- */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.5rem;   /* 24px */
+  --space-6: 2rem;     /* 32px */
+  --space-7: 3rem;     /* 48px: between sections on mobile */
+  --space-8: 4rem;     /* 64px: between sections on desktop */
+  --space-9: 6rem;     /* 96px */
+
+  /* ---------- Layout ---------- */
+  --container-max: 72rem;                        /* 1152px */
+  --gutter: clamp(1rem, 0.5rem + 2vw, 2rem);     /* 16 → 32px side padding */
+  /* Breakpoints (CSS variables can't be used in media queries, so use these numbers directly):
+     600px  = tables stack below this
+     900px  = two-column layouts (prose + key facts) from this width */
+
+  /* ---------- Shape ---------- */
+  --radius-control: 4px;   /* buttons and form controls only */
+  --border-thin: 1px;
+  --border-input: 2px;
+  --border-callout: 4px;
+  --border-site: 3px;      /* red-line boundary on maps */
+  --tap-target: 48px;
+
+  /* ---------- Focus ---------- */
+  /* Use with: outline: 3px solid var(--colour-whinstone); outline-offset: 2px; */
+  --focus-ring: 0 0 0 2px var(--colour-focus);
+
+  /* ---------- Motion ---------- */
+  --duration-quick: 150ms;   /* UI feedback */
+  --duration-draw: 1200ms;   /* red lines drawing in on the home page, once */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* ---------- Maps ---------- */
+  --map-height-mobile: min(60vh, 420px);
+  --map-height-desktop: 520px;
+  --map-site-fill-opacity: 0.1;
+  --map-green-belt-opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-quick: 0ms;
+    --duration-draw: 0ms;
+  }
+}
