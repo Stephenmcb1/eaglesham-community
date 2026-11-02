@@ -1,0 +1,555 @@
+---
+/*
+  The map of the proposed sites (style guide §7, brief §7.1).
+
+  Without JavaScript (and when printing) people see a plain drawing of the site
+  boundaries, made here at build time from the same GeoJSON files. With JavaScript,
+  src/scripts/map.ts swaps it for a Leaflet map you can pan and zoom, with extra
+  layers you can switch on below it.
+
+  The map is never the only way to get the facts: every page that uses it also
+  lists the sites as text (the schedule table or the key facts).
+
+  Props:
+    sites  - the site entries from the "sites" collection
+    focus  - optional site id: zoom in on this site (used on each site's own page)
+*/
+import type { CollectionEntry } from "astro:content";
+import "leaflet/dist/leaflet.css";
+import { site } from "../config/site";
+import sitesRaw from "../../public/data/eaglesham-sites.geojson?raw";
+import greenBeltRaw from "../../public/data/green-belt.geojson?raw";
+import conservationRaw from "../../public/data/conservation-area.geojson?raw";
+import {
+  boundsOf,
+  labelPointOf,
+  makeProjection,
+  pathOf,
+  scaleBarLength,
+  type FeatureCollection,
+} from "../utils/geo";
+
+interface Props {
+  sites: CollectionEntry<"sites">[];
+  focus?: string;
+}
+
+const { sites, focus } = Astro.props;
+
+const siteShapes = JSON.parse(sitesRaw) as FeatureCollection;
+const greenBelt = JSON.parse(greenBeltRaw) as FeatureCollection;
+const conservation = JSON.parse(conservationRaw) as FeatureCollection;
+
+// What each site's label says, e.g. "Waulkers Loan, up to 200 homes"
+const siteInfo = sites.map((site) => ({
+  id: site.data.mapFeatureId,
+  name: site.data.title,
+  homes: `, up to ${site.data.homes} homes`,
+  href: `/sites/${site.id}/`,
+}));
+
+// Zoom to the one site, or to all of them
+const focusShapes = siteShapes.features.filter((f) => !focus || f.properties.id === focus);
+const view = makeProjection(boundsOf(focusShapes), 1000, 3 / 2, focus ? 0.6 : 0.15);
+
+// Labels are HTML placed over the drawing (as percentages) so the text stays readable at any size
+const labels = siteShapes.features
+  .map((feature) => {
+    const [x, y] = view.project(labelPointOf(feature));
+    const info = siteInfo.find((s) => s.id === feature.properties.id);
+    return {
+      name: info?.name ?? String(feature.properties.name),
+      homes: info?.homes ?? "",
+      left: (x / view.width) * 100,
+      top: (y / view.height) * 100,
+    };
+  })
+  .filter((label) => label.left > 5 && label.left < 95 && label.top > 5 && label.top < 95);
+
+const scaleMetres = scaleBarLength(view.metresPerUnit, view.width);
+const scaleWidth = (scaleMetres / view.metresPerUnit / view.width) * 100;
+const scaleText = scaleMetres >= 1000 ? `${scaleMetres / 1000} km` : `${scaleMetres} m`;
+
+// A north arrow drawn as a shape, because the "↑" character shows as a coloured emoji on some phones.
+// map.ts reads it from data-north-arrow, so the drawing and the map match.
+const northArrow = `N <svg viewBox="0 0 10 14" width="10" height="14"><path d="M5 0 10 14 5 10 0 14Z" fill="currentColor"/></svg>`;
+
+const focusName = focus ? sites.find((s) => s.data.mapFeatureId === focus)?.data.title : undefined;
+const description = focusName
+  ? `Map of the ${focusName} site, with the other proposed sites nearby.`
+  : `Map of the ${sites.length} proposed housing sites around Eaglesham.`;
+const fallbackText = `${description} ${siteInfo.map((s) => s.name + s.homes).join(". ")}. The site boundaries are drawn in red, the green belt is shaded green and the conservation area has a dashed green outline.`;
+---
+
+<figure
+  class="site-map"
+  data-site-map
+  data-focus={focus ?? ""}
+  data-sites={JSON.stringify(siteInfo)}
+  data-label={description}
+  data-north-arrow={northArrow}
+>
+  {/* The drawing for no JavaScript. map.ts hides it once the real map is ready. */}
+  <div class="map-fallback" role="img" aria-label={fallbackText}>
+    <svg viewBox={`0 0 ${view.width} ${view.height}`} aria-hidden="true" focusable="false">
+      {greenBelt.features.map((f) => <path class="map-green-belt" d={pathOf(f, view.project)} />)}
+      {conservation.features.map((f) => <path class="map-conservation" d={pathOf(f, view.project)} />)}
+      {siteShapes.features.map((f) => <path class="map-site" d={pathOf(f, view.project)} />)}
+    </svg>
+    {
+      labels.map((label) => (
+        <span class="map-label" style={`left: ${label.left}%; top: ${label.top}%`}>
+          <span>
+            {label.name}<span class="label-homes">{label.homes}</span>
+          </span>
+        </span>
+      ))
+    }
+    <span class="north-arrow" aria-hidden="true" set:html={northArrow}></span>
+    <span class="scale-bar" aria-hidden="true">
+      <span class="scale-bar-line" style={`width: ${scaleWidth}%`}></span>
+      {scaleText}
+    </span>
+  </div>
+
+  {/* The interactive map goes in here. Hidden until the script runs. */}
+  <div class="map" hidden></div>
+
+  <div class="map-below">
+    <ul class="map-key" aria-label="Key">
+      <li><span class="swatch swatch-site" aria-hidden="true"></span>Proposed housing site (red line)</li>
+      <li><span class="swatch swatch-green-belt" aria-hidden="true"></span>Green belt, as proposed in LDP3</li>
+      <li><span class="swatch swatch-conservation" aria-hidden="true"></span>Eaglesham Conservation Area (dashed line)</li>
+    </ul>
+
+    {/* Extra layers, for the interactive map only */}
+    <fieldset class="map-layers" hidden>
+      <legend>Also show on the map</legend>
+      <label>
+        <input type="checkbox" data-layer="proposals" />
+        <span class="swatch swatch-proposal" aria-hidden="true"></span>
+        Other LDP3 proposals (school, roads, community hub…)
+      </label>
+      <label>
+        <input type="checkbox" data-layer="openSpace" />
+        <span class="swatch swatch-open-space" aria-hidden="true"></span>
+        Protected open space
+      </label>
+      <label>
+        <input type="checkbox" data-layer="biodiversity" />
+        <span class="swatch swatch-biodiversity" aria-hidden="true"></span>
+        Local Biodiversity Sites
+      </label>
+      <label>
+        <input type="checkbox" data-layer="trees" />
+        <span class="swatch swatch-trees" aria-hidden="true"></span>
+        Tree Preservation Orders
+      </label>
+      <label>
+        <input type="checkbox" data-layer="paths" />
+        <span class="swatch swatch-paths" aria-hidden="true"></span>
+        Core paths and cycle routes
+      </label>
+    </fieldset>
+
+    <figcaption>
+      Indicative only. See the <a href={site.council.ldp3Page}
+        >council's LDP3 maps</a
+      > for exact boundaries. Boundaries from East Renfrewshire Council's LDP3 map data. Base
+      map © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.
+    </figcaption>
+  </div>
+
+  {/* Hatching for Tree Preservation Orders. It can't be display: none or the pattern won't draw. */}
+  <svg class="map-patterns" aria-hidden="true" focusable="false">
+    <defs>
+      <pattern id="map-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="6" class="map-hatch-line"></line>
+      </pattern>
+    </defs>
+  </svg>
+</figure>
+
+<script src="../scripts/map.ts"></script>
+
+<style>
+  .site-map {
+    margin: var(--space-7) 0;
+  }
+
+  /* ---------- The drawing for no JavaScript ---------- */
+  .map-fallback {
+    position: relative;
+    overflow: hidden;
+    border: var(--border-thin) solid var(--colour-rule);
+    background: var(--colour-background);
+  }
+
+  .map-fallback svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .north-arrow,
+  .map :global(.north-arrow-control) {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .north-arrow {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+  }
+
+  .scale-bar {
+    position: absolute;
+    bottom: var(--space-3);
+    left: var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .scale-bar-line {
+    height: var(--space-2);
+    border: 2px solid var(--colour-text-muted);
+    border-top: 0;
+  }
+
+  /* ---------- The interactive map ---------- */
+  .map {
+    height: var(--map-height-mobile);
+    border: var(--border-thin) solid var(--colour-rule);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+  }
+
+  @media (min-width: 900px) {
+    .map {
+      height: var(--map-height-desktop);
+    }
+  }
+
+  /* Once the real map is showing, hide the drawing */
+  .site-map.is-interactive .map-fallback {
+    display: none;
+  }
+
+  /* Paper copies get the drawing, which prints far better than map tiles */
+  @media print {
+    .site-map.is-interactive .map-fallback {
+      display: block;
+    }
+
+    .map,
+    .map-layers {
+      display: none !important;
+    }
+  }
+
+  /*
+    global.css shrinks every image and SVG to fit its box. Leaflet's drawing layer
+    is meant to be bigger than the map, so undo that here or the shapes end up
+    squashed and in the wrong place.
+  */
+  .map :global(.leaflet-pane svg),
+  .map :global(.leaflet-pane img) {
+    max-width: none;
+    height: revert-layer;
+  }
+
+  /* Grey out the street map so the sites stand out. Only the tiles, not our layers. */
+  .map :global(.leaflet-tile-pane) {
+    filter: grayscale(0.7) contrast(0.95);
+  }
+
+  /* Zoom buttons: big enough to tap */
+  .map :global(.leaflet-control-zoom a) {
+    width: var(--tap-target);
+    height: var(--tap-target);
+    line-height: var(--tap-target);
+    font-size: var(--text-h3);
+    color: var(--colour-text);
+  }
+
+  .map :global(.leaflet-control-attribution) {
+    font-size: var(--text-sm);
+  }
+
+  .map :global(.leaflet-control-attribution a),
+  .map :global(.leaflet-popup-content a) {
+    color: var(--colour-link);
+  }
+
+  .map :global(.leaflet-popup-content) {
+    margin: var(--space-4);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+  }
+
+  .map :global(.leaflet-popup-content p) {
+    margin: var(--space-1) 0 0;
+  }
+
+  .map :global(.leaflet-popup-close-button) {
+    width: var(--tap-target);
+    height: var(--tap-target);
+    font-size: var(--text-h3);
+    line-height: var(--tap-target);
+  }
+
+  .map :global(.leaflet-popup-content-wrapper),
+  .map :global(.leaflet-popup-tip) {
+    border-radius: 0;
+    box-shadow: none;
+    border: var(--border-thin) solid var(--colour-rule);
+  }
+
+  .map :global(.leaflet-control-scale-line) {
+    border-color: var(--colour-text-muted);
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .map :global(.north-arrow-control) {
+    padding: var(--space-1) var(--space-2);
+    background: var(--colour-background);
+    border: var(--border-thin) solid var(--colour-rule);
+    color: var(--colour-text-muted);
+    font-weight: var(--weight-bold);
+  }
+
+  /* ---------- Shapes, used by both the drawing and the map ---------- */
+  .site-map :global(.map-site) {
+    stroke: var(--colour-site-boundary);
+    stroke-width: var(--border-site);
+    fill: var(--colour-site-boundary);
+    fill-opacity: var(--map-site-fill-opacity);
+  }
+
+  .site-map :global(.map-green-belt) {
+    stroke: none;
+    fill: var(--colour-green-belt);
+    fill-opacity: var(--map-green-belt-opacity);
+  }
+
+  .site-map :global(.map-conservation) {
+    stroke: var(--colour-conservation-area);
+    stroke-width: 2px;
+    stroke-dasharray: 8 6;
+    fill: none;
+  }
+
+  .site-map :global(.map-open-space) {
+    stroke: none;
+    fill: var(--colour-moss);
+    fill-opacity: 1;
+  }
+
+  .site-map :global(.map-biodiversity) {
+    stroke: var(--colour-orry);
+    stroke-width: 1px;
+    stroke-dasharray: 2 3;
+    fill: none;
+  }
+
+  .site-map :global(.map-trees) {
+    stroke: var(--colour-stone);
+    stroke-width: 1px;
+    fill: url(#map-hatch);
+    fill-opacity: 1;
+  }
+
+  .site-map :global(.map-paths) {
+    stroke: var(--colour-stone);
+    stroke-width: 2px;
+    stroke-dasharray: 6 5;
+    fill: none;
+  }
+
+  .site-map :global(.map-proposal-area) {
+    stroke: var(--colour-orry);
+    stroke-width: 2px;
+    fill: none;
+  }
+
+  .map-patterns {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  .map-patterns :global(.map-hatch-line) {
+    stroke: var(--colour-stone);
+    stroke-width: 1px;
+  }
+
+  /* Site labels: white with a thin border (style guide §7) */
+  .site-map :global(.map-label) {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  .site-map :global(.map-label > span) {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    padding: 0 var(--space-2);
+    background: var(--colour-background);
+    border: var(--border-thin) solid var(--colour-rule);
+    color: var(--colour-text);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  /* Phones: just the site name, so the labels don't crowd each other. The homes are in the table. */
+  @media (max-width: 599.98px) {
+    .site-map :global(.label-homes) {
+      display: none;
+    }
+  }
+
+  /* On the map the labels are buttons, so show the focus ring on the visible part */
+  .site-map :global(.map-label:focus-visible) {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .site-map :global(.map-label:focus-visible > span),
+  .site-map :global(.map-proposal:focus-visible > span:first-child) {
+    outline: 3px solid var(--colour-whinstone);
+    outline-offset: 2px;
+    box-shadow: var(--focus-ring);
+  }
+
+  .site-map :global(.map-label),
+  .site-map :global(.map-proposal) {
+    cursor: pointer;
+  }
+
+  /* LDP3 proposals: small Orry circles with a white centre */
+  .site-map :global(.map-proposal > span:first-child) {
+    position: absolute;
+    inset: 0;
+    border: 4px solid var(--colour-orry);
+    border-radius: 50%;
+    background: var(--colour-background);
+  }
+
+  .site-map :global(.map-proposal:focus-visible) {
+    outline: none;
+    box-shadow: none;
+  }
+
+  /* ---------- Key and layer switches ---------- */
+  .map-below {
+    margin-top: var(--space-4);
+  }
+
+  .map-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  .map-key li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .swatch {
+    flex: none;
+    display: inline-block;
+    width: 2rem;
+    height: 1.25rem;
+  }
+
+  .swatch-site {
+    border: var(--border-site) solid var(--colour-site-boundary);
+    /* Red line at 10%, as on the map */
+    background: color-mix(in srgb, var(--colour-site-boundary) 10%, transparent);
+  }
+
+  .swatch-green-belt {
+    background: var(--colour-green-belt);
+  }
+
+  .swatch-conservation {
+    border: 2px dashed var(--colour-conservation-area);
+  }
+
+  .swatch-proposal {
+    width: 1.25rem;
+    margin-inline: 0.375rem; /* takes up the same 2rem as the other swatches, so the text lines up */
+    border: 4px solid var(--colour-orry);
+    border-radius: 50%;
+    background: var(--colour-background);
+  }
+
+  .swatch-open-space {
+    background: var(--colour-moss);
+  }
+
+  .swatch-biodiversity {
+    border: 1px dotted var(--colour-orry);
+  }
+
+  .swatch-trees {
+    border: 1px solid var(--colour-stone);
+    background: repeating-linear-gradient(45deg, var(--colour-stone) 0 1px, transparent 1px 6px);
+  }
+
+  .swatch-paths {
+    height: 0;
+    border-top: 2px dashed var(--colour-stone);
+  }
+
+  .map-layers {
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    border: 0;
+  }
+
+  .map-layers legend {
+    margin-bottom: var(--space-2);
+    padding: 0;
+    font-weight: var(--weight-bold);
+  }
+
+  .map-layers label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--tap-target);
+  }
+
+  .map-layers input {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0;
+    accent-color: var(--colour-orry);
+  }
+
+  figcaption {
+    max-width: var(--measure);
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+  }
+</style>

@@ -17,6 +17,8 @@ TODO: Name of the group and contact email. Who is responsible for any personal i
 
 **Visit counts.** We use Cloudflare Web Analytics to count page visits. It doesn't use cookies and doesn't identify you. TODO: link to Cloudflare's privacy information.
 
+**Maps.** The maps on the sites pages use street map images from [OpenStreetMap](https://www.openstreetmap.org). To show them, your browser downloads the images from OpenStreetMap's servers, which see your IP address, as any website does. [OpenStreetMap's privacy policy](https://osmfoundation.org/wiki/Privacy_Policy) explains what they do with it. If you turn JavaScript off, you see a simple drawing instead and nothing is downloaded from OpenStreetMap.
+
 **The response helper.** When you use the response helper, everything you type stays on your own device. Nothing is sent to us or anyone else. Your draft is saved in your browser so it survives a reload, and you can clear it at any time with "Clear my draft".
 
 **If you email us.** We use your email only to reply and to keep you updated if you ask us to. TODO: how long we keep emails, and when we delete them.

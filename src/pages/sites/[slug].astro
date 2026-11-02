@@ -1,21 +1,23 @@
 ---
 /*
   One page for each file in src/content/sites/, e.g. waulkers-loan.md becomes /sites/waulkers-loan/.
-  Layout from the style guide §5: key facts beside the text on wide screens, above it on phones.
-  TODO (Phase 1, step 6): add the map zoomed to this site, with its key.
+  Layout from the style guide §5: key facts beside the text on wide screens, above it on phones,
+  then the map zoomed to this site.
 */
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import SourceList from "../../components/SourceList.astro";
+import SiteMap from "../../components/SiteMap.astro";
 import { formatDate } from "../../utils/dates";
 
 export async function getStaticPaths() {
   const sites = await getCollection("sites");
-  return sites.map((site) => ({ params: { slug: site.id }, props: { site } }));
+  // Every page gets all the sites too, so its map can show the neighbouring ones
+  return sites.map((site) => ({ params: { slug: site.id }, props: { site, allSites: sites } }));
 }
 
-const { site } = Astro.props;
+const { site, allSites } = Astro.props;
 const { Content } = await render(site);
 const facts = site.data;
 
@@ -58,6 +60,8 @@ const areaText =
       <Content />
     </div>
   </div>
+
+  <SiteMap sites={allSites} focus={facts.mapFeatureId} />
 
   <p class="respond">
     {/* The response helper (step 7) reads ?site= and ticks this site for you */}
@@ -127,7 +131,7 @@ const areaText =
   }
 
   .respond {
-    margin-block: var(--space-7);
+    margin-block: 0 var(--space-7);
   }
 
   .updated {
