@@ -20,7 +20,15 @@ TODO: Eaglesham Primary School and Mearns Castle High School capacity, GP and he
 
 ## What the plan says
 
-TODO: The council describes LDP3 as "infrastructure first". Quote what it commits to for Eaglesham, and when, with page numbers. Check the Delivery Programme.
+The Proposed LDP3 maps link these infrastructure proposals to the Eaglesham sites (from the council's proposals map; reference numbers in brackets):
+
+- Eaglesham Primary School: extension and a multi-use games area (LP5.42)
+- A new 3G multi-use games area to serve the primary school, linked to Waulkers Loan (LP6.6)
+- Mearns Castle High School: capacity enhancement (LP5.50)
+- Additional health and social care clinical space for Clarkston South and Eaglesham (LP5.54)
+- Eaglesham outdoor sports pitch upgrade, linked to all three sites (LP6.5)
+
+TODO: The council describes LDP3 as "infrastructure first". For each item, find in the plan and its Delivery Programme: what exactly is proposed, who pays, and when it is due compared with the homes. Quote with page numbers.
 
 ## What we know
 

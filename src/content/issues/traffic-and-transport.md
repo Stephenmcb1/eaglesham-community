@@ -20,7 +20,14 @@ TODO: Main routes in and out (Montgomery Street, Polnoon Street, Glasgow Road…
 
 ## What the plan says
 
-TODO: Quote the Proposed LDP3 on transport for Eaglesham, with page numbers. Does it include a transport appraisal?
+The Proposed LDP3 maps link these transport proposals to the Eaglesham sites (from the council's proposals map; reference numbers in brackets):
+
+- Bus enhancement on the Clarkston to Eaglesham corridor (SP8.14)
+- Belle Craig Roundabout: "north & south approach widening", linked to Clarkston South and all three Eaglesham sites (SP8.17)
+- About 5 km of paths and active travel routes through Eaglesham North (SP2.18)
+- Strategic cycle corridors from Netherlee to Eaglesham and Whitelee, and Eaglesham to Barrhead (SP8.3), and an Eaglesham to Darvel long-distance walking and cycling route (SP2.30)
+
+TODO: Quote what the plan says about each, with page numbers. Does the plan include a transport appraisal for Eaglesham? Is the bus improvement funded, and when would it start compared with the homes?
 
 ## What we know
 

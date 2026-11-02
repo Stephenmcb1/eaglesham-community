@@ -259,6 +259,12 @@ The memorable piece, and the only bold element.
 - Proposed sites: Red line stroke 3px with a fill of the same colour at 10% opacity, so the area can be clicked.
 - Green belt: Moss fill at 50% opacity, no stroke.
 - Conservation area: Orry 2px dashed line, no fill.
+- Optional context layers (off by default, switched on with labelled checkboxes below the map, not Leaflet's floating layer control):
+  - LDP3 proposals (school extension, roundabout, hub…): small Orry circles with a white centre. Clicking one shows its reference and description.
+  - Open space (including the Orry): Moss fill, no stroke
+  - Local Biodiversity Sites: Orry 1px dotted outline, no fill
+  - Tree Preservation Orders: Stone 1px outline with a light hatch
+  - Core paths and cycle corridors: Stone 2px dashed lines
 - Labels: site name and homes in a white label with a 1px Rule border.
 - The key sits **below** the map as HTML, not floating over it.
 - Map height: 60vh on phones (up to 420px) and 520px on desktop.

@@ -26,7 +26,13 @@ TODO: Habitats on and around the sites: fields, hedgerows, trees, burns. Protect
 
 ## What the plan says
 
-TODO: Quote the Proposed LDP3 on biodiversity, with page numbers. Has any ecological survey been published for these sites?
+From the council's maps:
+
+- All three sites are green belt in the current plan (LDP2). LDP3 would release Holehouse Road, Waulkers Loan and part of Eaglesham North. About 31.5 hectares of Eaglesham North would stay green belt as a green network.
+- Local Biodiversity Sites near the village include Eaglesham Common, Picketlaw, Garret Law to Picketlaw and Low Borland. None overlaps the three housing sites on the council's map.
+- The development frameworks show hedgerows, trees and burns to be retained, and "screening woodland".
+
+TODO: Quote the Proposed LDP3 on biodiversity, with page numbers. Has any ecological survey been published for these sites? Check the plan's Environmental Report.
 
 ## What we know
 
