@@ -1,0 +1,210 @@
+---
+/*
+  The site schedule: a table of the three proposed sites (style guide §6).
+  Used on /sites/ and on the home page. Below 600px wide, each row becomes a
+  stacked block with its own labels, so nothing scrolls sideways on a phone.
+*/
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  sites: CollectionEntry<"sites">[];
+  caption?: string;
+}
+
+const { sites, caption = "Proposed housing sites in Eaglesham" } = Astro.props;
+
+// Strat 1.6, 1.7, 1.8: the order the plan lists them
+const rows = [...sites].sort((a, b) =>
+  a.data.ldpRef.localeCompare(b.data.ldpRef, "en-GB", { numeric: true }),
+);
+
+const totalHomes = rows.reduce((sum, site) => sum + site.data.homes, 0);
+const knownAreas = rows.map((site) => site.data.areaHectares).filter((area) => area !== null);
+// Only show a total area if every site's area is known
+const totalArea =
+  knownAreas.length === rows.length ? knownAreas.reduce((sum, area) => sum + area, 0) : null;
+
+// 59 becomes "59.0", 5.07 becomes "5.1", so the column lines up
+const formatArea = (area: number | null) =>
+  area === null
+    ? "Not known yet"
+    : area.toLocaleString("en-GB", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const formatHomes = (homes: number) => homes.toLocaleString("en-GB");
+---
+
+<div class="schedule">
+  <!-- The role attributes keep this read as a table when phones show it as stacked blocks -->
+  <table role="table">
+    <caption>{caption}</caption>
+    <thead role="rowgroup">
+      <tr role="row">
+        <th role="columnheader" scope="col">Site</th>
+        <th role="columnheader" scope="col" class="number">Homes (up to)</th>
+        <th role="columnheader" scope="col" class="number">Area (ha)</th>
+        <th role="columnheader" scope="col">Developer</th>
+        <th role="columnheader" scope="col">Land now</th>
+      </tr>
+    </thead>
+    <tbody role="rowgroup">
+      {
+        rows.map((site) => (
+          <tr role="row">
+            <th role="rowheader" scope="row">
+              <a href={`/sites/${site.id}/`}>{site.data.title}</a>
+            </th>
+            <td role="cell" class="number" data-label="Homes (up to)">
+              {formatHomes(site.data.homes)}
+            </td>
+            <td role="cell" class="number" data-label="Area (ha)">
+              {formatArea(site.data.areaHectares)}
+            </td>
+            <td role="cell" data-label="Developer">{site.data.developer}</td>
+            <td role="cell" data-label="Land now">{site.data.landNow}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+    <tfoot role="rowgroup">
+      <tr role="row">
+        <th role="rowheader" scope="row">Total</th>
+        <td role="cell" class="number" data-label="Homes (up to)">{formatHomes(totalHomes)}</td>
+        <td role="cell" class="number" data-label="Area (ha)">{totalArea === null ? "" : formatArea(totalArea)}</td>
+        <td role="cell"></td>
+        <td role="cell"></td>
+      </tr>
+    </tfoot>
+  </table>
+  <p class="note">
+    Areas are measured from the council's LDP3 map data. Developers are as named in public
+    reports. "Land now" is the land's status in the current plan (LDP2).
+  </p>
+</div>
+
+<style>
+  table {
+    width: 100%;
+    text-align: left;
+  }
+
+  caption {
+    margin-bottom: var(--space-3);
+    font-weight: var(--weight-bold);
+    text-align: left;
+  }
+
+  th,
+  td {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--border-thin) solid var(--colour-rule);
+    vertical-align: top;
+  }
+
+  /* Line the first and last columns up with the text above and below the table */
+  th:first-child,
+  td:first-child {
+    padding-left: 0;
+  }
+
+  th:last-child,
+  td:last-child {
+    padding-right: 0;
+  }
+
+  thead th {
+    border-bottom-width: 2px;
+    border-bottom-color: var(--colour-text);
+  }
+
+  /* Site names and column headings in bold; data in regular weight */
+  tbody th {
+    font-weight: var(--weight-bold);
+  }
+
+  .number {
+    text-align: right;
+  }
+
+  tfoot th,
+  tfoot td {
+    border-bottom: 0;
+    border-top: 2px solid var(--colour-text);
+    font-weight: var(--weight-bold);
+  }
+
+  .note {
+    margin-top: var(--space-3);
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  /* ---------- Phones: one block per site, with labels ---------- */
+  @media (max-width: 599.98px) {
+    table,
+    caption,
+    tbody,
+    tfoot,
+    tr,
+    th,
+    td {
+      display: block;
+    }
+
+    /* The column headings are replaced by a label on each value */
+    thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    tr {
+      padding-block: var(--space-4);
+      border-bottom: var(--border-thin) solid var(--colour-rule);
+    }
+
+    th,
+    td {
+      padding: 0;
+      border: 0;
+    }
+
+    tbody th {
+      margin-bottom: var(--space-2);
+    }
+
+    td {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-4);
+      text-align: left;
+    }
+
+    td::before {
+      content: attr(data-label);
+      color: var(--colour-text-muted);
+    }
+
+    td.number {
+      text-align: left;
+    }
+
+    /* Empty total cells have nothing to show */
+    td:empty {
+      display: none;
+    }
+
+    tfoot tr {
+      border-bottom: 0;
+    }
+
+    tfoot th,
+    tfoot td {
+      border-top: 0;
+    }
+
+    tfoot tr {
+      border-top: 2px solid var(--colour-text);
+    }
+  }
+</style>

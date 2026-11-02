@@ -1,11 +1,14 @@
 ---
 /*
   One page for each file in src/content/sites/, e.g. waulkers-loan.md becomes /sites/waulkers-loan/.
-  TODO (Phase 1, step 5): add the breadcrumb, key facts panel, map and "Respond about this site" button.
+  Layout from the style guide §5: key facts beside the text on wide screens, above it on phones.
+  TODO (Phase 1, step 6): add the map zoomed to this site, with its key.
 */
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
 import SourceList from "../../components/SourceList.astro";
+import { formatDate } from "../../utils/dates";
 
 export async function getStaticPaths() {
   const sites = await getCollection("sites");
@@ -14,17 +17,122 @@ export async function getStaticPaths() {
 
 const { site } = Astro.props;
 const { Content } = await render(site);
+const facts = site.data;
+
+// "up to 200 homes" becomes "Up to 200 homes"
+const homesText = facts.homesNote
+  ? facts.homesNote.charAt(0).toUpperCase() + facts.homesNote.slice(1)
+  : `Up to ${facts.homes} homes`;
+const areaText =
+  facts.areaHectares === null
+    ? "Not known yet"
+    : `${facts.areaHectares.toLocaleString("en-GB")} hectares`;
 ---
 
-<BaseLayout title={site.data.title} description={site.data.summary}>
-  <h1>{site.data.title}</h1>
-  <p class="lead">{site.data.summary}</p>
-  <Content />
-  <SourceList sources={site.data.sources} />
+<BaseLayout title={facts.title} description={facts.summary}>
+  <Breadcrumb items={[{ label: "The sites", href: "/sites/" }, { label: facts.title }]} />
+  <h1>{facts.title}</h1>
+  <p class="lead">{facts.summary}</p>
+
+  <div class="site-layout">
+    {/* First in the page so phones show it before the text */}
+    <aside class="key-facts" aria-labelledby="key-facts-heading">
+      <h2 id="key-facts-heading">Key facts</h2>
+      <dl>
+        <dt>Homes</dt>
+        <dd>{homesText}</dd>
+        <dt>Area</dt>
+        <dd>{areaText}</dd>
+        <dt>Developer</dt>
+        <dd>{facts.developer}</dd>
+        <dt>Land now</dt>
+        <dd>{facts.landNow}</dd>
+        <dt>Phasing</dt>
+        <dd>{facts.phasing}</dd>
+        <dt>LDP3 reference</dt>
+        <dd>{facts.ldpRef}</dd>
+      </dl>
+    </aside>
+
+    <div class="site-text">
+      <Content />
+    </div>
+  </div>
+
+  <p class="respond">
+    {/* The response helper (step 7) reads ?site= and ticks this site for you */}
+    <a class="button" href={`/respond/?site=${site.id}`}>Respond about this site</a>
+  </p>
+
+  <SourceList sources={facts.sources} />
+
+  <p class="updated">Last updated {formatDate(facts.updated)}.</p>
 </BaseLayout>
 
 <style>
-  .lead {
-    font-size: var(--text-lead);
+  .site-layout {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+  }
+
+  /* Wide screens: text on the left, key facts on the right */
+  @media (min-width: 900px) {
+    .site-layout {
+      grid-template-columns: minmax(0, var(--measure)) minmax(16rem, 1fr);
+      gap: var(--space-8);
+      align-items: start;
+    }
+
+    .key-facts {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .site-text {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+
+  /* Key facts: Harl panel with a definition list (style guide §6) */
+  .key-facts {
+    padding: var(--space-5);
+    background: var(--colour-surface);
+  }
+
+  .key-facts h2 {
+    margin-top: 0;
+  }
+
+  dl {
+    margin: 0;
+  }
+
+  dt {
+    font-weight: var(--weight-bold);
+  }
+
+  dd {
+    margin: 0 0 var(--space-4);
+  }
+
+  dd:last-child {
+    margin-bottom: 0;
+  }
+
+  /* The first heading in the text lines up with the top of the key facts panel */
+  .site-text > :global(:first-child) {
+    margin-top: 0;
+  }
+
+  .respond {
+    margin-block: var(--space-7);
+  }
+
+  .updated {
+    margin-top: var(--space-7);
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
   }
 </style>

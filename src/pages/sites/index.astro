@@ -1,0 +1,49 @@
+---
+/*
+  /sites/: the site schedule and a short summary of each site.
+  TODO (Phase 1, step 6): add the map of all three sites, with its key and no-JavaScript image.
+*/
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteSchedule from "../../components/SiteSchedule.astro";
+import SourceList from "../../components/SourceList.astro";
+
+const sites = (await getCollection("sites")).sort((a, b) =>
+  a.data.ldpRef.localeCompare(b.data.ldpRef, "en-GB", { numeric: true }),
+);
+const totalHomes = sites.reduce((sum, site) => sum + site.data.homes, 0);
+
+// Every source used by the site files, listed once each
+const sources = [
+  ...new Map(
+    sites.flatMap((site) => site.data.sources).map((source) => [source.url || source.title, source]),
+  ).values(),
+];
+---
+
+<BaseLayout
+  title="The sites"
+  description={`The ${sites.length} sites proposed for new homes around Eaglesham in LDP3, with up to ${totalHomes} homes in total.`}
+>
+  <h1>The sites</h1>
+  <p class="lead">
+    LDP3 proposes {sites.length} sites for new homes around Eaglesham, with up to {totalHomes} homes
+    in total.
+  </p>
+
+  <SiteSchedule sites={sites} />
+
+  <h2>The sites in more detail</h2>
+  {
+    sites.map((site) => (
+      <>
+        <h3>
+          <a href={`/sites/${site.id}/`}>{site.data.title}</a>
+        </h3>
+        <p>{site.data.summary}</p>
+      </>
+    ))
+  }
+
+  <SourceList sources={sources} />
+</BaseLayout>

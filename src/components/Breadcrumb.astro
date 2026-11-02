@@ -1,0 +1,47 @@
+---
+// "The sites › Waulkers Loan": where this page sits in the site (style guide §5).
+interface Props {
+  // The pages above this one, from the top down. The current page comes last, with no href.
+  items: { label: string; href?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    {
+      items.map((item) => (
+        <li>
+          {item.href ? (
+            <a href={item.href}>{item.label}</a>
+          ) : (
+            <span aria-current="page">{item.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .breadcrumb {
+    margin-bottom: var(--space-4);
+    font-size: var(--text-sm);
+  }
+
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* The › between items. The "/ ''" part stops screen readers reading it out. */
+  li + li::before {
+    content: "›" / "";
+    margin-inline: var(--space-2);
+    color: var(--colour-text-muted);
+  }
+</style>
