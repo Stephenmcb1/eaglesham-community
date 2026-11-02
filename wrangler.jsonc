@@ -3,6 +3,10 @@
 {
   "name": "eaglesham-community",
   "compatibility_date": "2026-11-02",
+  // The *.workers.dev address. It's the live site until a custom domain is added.
+  "workers_dev": true,
+  // A preview link for each branch and pull request, so changes can be checked before they go live
+  "preview_urls": true,
   "assets": {
     // Astro builds the site into dist/
     "directory": "./dist",
