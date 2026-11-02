@@ -4,7 +4,7 @@ A community website explaining East Renfrewshire Council's Proposed Local Develo
 
 Run by volunteers from the Eaglesham Planning Objections and Info Group. Independent of East Renfrewshire Council. Intended to become the base of the Eaglesham & Waterfoot Community Council website.
 
-**Status:** planning. See [`docs/PROJECT-BRIEF.md`](docs/PROJECT-BRIEF.md) for the plan and [`docs/STYLE-GUIDE.md`](docs/STYLE-GUIDE.md) for the design.
+**Status:** in development (Phase 1). A holding page is live while the site is built. See [`docs/PROJECT-BRIEF.md`](docs/PROJECT-BRIEF.md) for the plan and [`docs/STYLE-GUIDE.md`](docs/STYLE-GUIDE.md) for the design.
 
 ---
 
@@ -49,8 +49,6 @@ npm run build      # build into dist/
 npm run preview    # view the built site
 ```
 
-*(These work once Phase 1, step 1 has set the project up.)*
-
 ### Working with Claude Code
 
 Open a terminal in this folder and run `claude`. Claude Code reads `CLAUDE.md` automatically. For the first session, try:
@@ -61,7 +59,7 @@ Then take one build step per session, and commit after each one.
 
 ### Deploying
 
-Every push to `main` on GitHub triggers a Cloudflare build (Workers static assets). Pull requests get a preview link. *(Set up in Phase 1, step 1.)*
+Every push to `main` on GitHub triggers a Cloudflare build (Workers static assets). Pull requests get a preview link. The build settings are in `wrangler.jsonc`, and `.node-version` sets the Node version Cloudflare uses.
 
 ---
 
@@ -72,7 +70,7 @@ Keep this table current. It's the handover list for the community council.
 | Account | Registered to | Owners | Renewal / cost |
 |---|---|---|---|
 | Domain | TODO: group email | TODO | TODO: yearly, a few pounds |
-| GitHub organisation | TODO: group email | Stephen + TODO | Free |
+| GitHub repository | Stephenmcb1 (personal) for now: https://github.com/Stephenmcb1/eaglesham-community. TODO: transfer to the group organisation | Stephen + TODO | Free |
 | Cloudflare | TODO: group email | Stephen + TODO | Free |
 | Group email | TODO | TODO | Free |
 | Supabase (Phase 2, if used) | TODO: group email | TODO | Free tier |
