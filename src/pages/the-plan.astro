@@ -1,0 +1,39 @@
+---
+/*
+  The plan page: the text of src/content/pages/the-plan.md, plus a short section on
+  the big issues. Until the issue pages are built (Phase 2), the "The issues" link in
+  the main navigation comes here (#the-issues).
+*/
+import { getCollection, getEntry, render } from "astro:content";
+import ProseLayout from "../layouts/ProseLayout.astro";
+import SourceList from "../components/SourceList.astro";
+
+const page = await getEntry("pages", "the-plan");
+if (!page) throw new Error("src/content/pages/the-plan.md is missing");
+const { Content } = await render(page);
+
+// Each issue's title and summary, in the order set by its "order" field
+const issues = (await getCollection("issues")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<ProseLayout title={page.data.title} description={page.data.description} updated={page.data.updated}>
+  <Content />
+
+  <section aria-labelledby="the-issues">
+    <h2 id="the-issues">The issues</h2>
+    <p>
+      We're writing a page about each of the big issues the plan raises for Eaglesham. Until
+      then, here's what each one covers.
+    </p>
+    {
+      issues.map((issue) => (
+        <>
+          <h3>{issue.data.title}</h3>
+          <p>{issue.data.summary}</p>
+        </>
+      ))
+    }
+  </section>
+
+  <SourceList sources={page.data.sources} />
+</ProseLayout>

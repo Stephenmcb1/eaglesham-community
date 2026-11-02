@@ -1,14 +1,20 @@
 ---
 /*
-  One page for each file in src/content/pages/, e.g. the-plan.md becomes /the-plan/.
+  One page for each file in src/content/pages/, e.g. about.md becomes /about/.
   Pages marked draft: true only appear with npm run dev, never on the live site.
-  TODO (Phase 1, step 4): move these into ProseLayout with the long-form page design.
 */
 import { getCollection, render } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import ProseLayout from "../layouts/ProseLayout.astro";
+import SourceList from "../components/SourceList.astro";
 
 export async function getStaticPaths() {
-  const pages = await getCollection("pages", ({ data }) => import.meta.env.DEV || !data.draft);
+  // Pages that have their own file in src/pages/ because they show extra things.
+  // (This has to be inside getStaticPaths: Astro runs it separately from the rest of the file.)
+  const pagesWithOwnRoute = ["the-plan"];
+  const pages = await getCollection(
+    "pages",
+    ({ id, data }) => !pagesWithOwnRoute.includes(id) && (import.meta.env.DEV || !data.draft),
+  );
   return pages.map((page) => ({ params: { page: page.id }, props: { page } }));
 }
 
@@ -16,7 +22,7 @@ const { page } = Astro.props;
 const { Content } = await render(page);
 ---
 
-<BaseLayout title={page.data.title} description={page.data.description}>
-  <h1>{page.data.title}</h1>
+<ProseLayout title={page.data.title} description={page.data.description} updated={page.data.updated}>
   <Content />
-</BaseLayout>
+  <SourceList sources={page.data.sources} />
+</ProseLayout>

@@ -3,10 +3,10 @@
   "Friday 22 January 2027" (style guide §11).
 */
 
-// Turn "2027-01-22" into "Friday 22 January 2027".
+// Turn "2027-01-22" (or a date from a content file) into "Friday 22 January 2027".
 // timeZone "UTC" stops the date shifting by a day depending on where the build runs.
 // The weekday is formatted separately because en-GB adds a comma after it ("Friday, 22…").
-export function formatDate(isoDate: string): string {
+export function formatDate(isoDate: string | Date): string {
   const date = new Date(isoDate);
   const weekday = date.toLocaleDateString("en-GB", { weekday: "long", timeZone: "UTC" });
   const dayMonthYear = date.toLocaleDateString("en-GB", {
@@ -19,7 +19,7 @@ export function formatDate(isoDate: string): string {
 }
 
 // The same without the weekday: "22 January 2027".
-export function formatDateShort(isoDate: string): string {
+export function formatDateShort(isoDate: string | Date): string {
   return new Date(isoDate).toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",

@@ -2,6 +2,15 @@
 title: "LDP3 in plain English"
 description: "What East Renfrewshire's Local Development Plan 3 is, where it's up to, and what counts when you respond."
 draft: false
+sources:
+  - title: "East Renfrewshire Council, Local Development Plan 3"
+    url: "https://www.eastrenfrewshire.gov.uk/ldp3"
+  - title: "East Renfrewshire Council, Proposed LDP3 consultation"
+    url: "https://getinvolved.eastrenfrewshire.gov.uk/east-renfrewshire-proposed-local-development-plan-3-2"
+  - title: "East Renfrewshire sets out proposed 10-year development plan, ScottishNews.com, 10 September 2026"
+    url: "https://www.scottishnews.com/articles/east-renfrewshire-sets-out-proposed-10-year-development-plan"
+  - title: "East Renfrewshire extends LDP3 consultation period, East Renfrewshire News"
+    url: "https://www.eastrennews.co.uk/news/26683690.east-renfrewshire-extends-ldp3-consultation-period/"
 updated: 2026-11-02
 ---
 
@@ -49,9 +58,3 @@ TODO: Check this list with Planning Aid Scotland.
 - TODO: Link to the Proposed LDP3 and its maps on the council's website
 - TODO: Link to the council's response form
 
-## Sources
-
-- East Renfrewshire Council, Local Development Plan 3 page: https://www.eastrenfrewshire.gov.uk/ldp3
-- East Renfrewshire Council, Proposed LDP3 consultation: https://getinvolved.eastrenfrewshire.gov.uk/east-renfrewshire-proposed-local-development-plan-3-2
-- "East Renfrewshire sets out proposed 10-year development plan", ScottishNews.com, 10 September 2026: https://www.scottishnews.com/articles/east-renfrewshire-sets-out-proposed-10-year-development-plan
-- "East Renfrewshire extends LDP3 consultation period", East Renfrewshire News: https://www.eastrennews.co.uk/news/26683690.east-renfrewshire-extends-ldp3-consultation-period/

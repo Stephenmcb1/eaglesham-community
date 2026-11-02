@@ -1,0 +1,70 @@
+---
+/*
+  Long-form text pages (The plan, About, Privacy, Accessibility…). Sits inside BaseLayout.
+  Puts the title, an optional intro paragraph and the page text in a 65-character column,
+  and ends with the date the page was last updated.
+*/
+import BaseLayout from "./BaseLayout.astro";
+import { formatDate } from "../utils/dates";
+
+interface Props {
+  title: string;
+  description?: string;
+  // Optional intro paragraph under the title
+  lead?: string;
+  // From the page file's "updated" field
+  updated?: Date;
+}
+
+const { title, description, lead, updated } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="prose">
+    <h1>{title}</h1>
+    {lead && <p class="lead">{lead}</p>}
+    <slot />
+    {updated && <p class="updated">Last updated {formatDate(updated)}.</p>}
+  </article>
+</BaseLayout>
+
+<style>
+  .prose {
+    max-width: var(--measure);
+  }
+
+  /*
+    Numbered lists are real sequences (style guide §6, "Steps"): large Caslon numbers
+    with the step text beside them. :global() is needed because the list comes from
+    a Markdown file, which this component's scoped styles don't reach otherwise.
+  */
+  .prose :global(ol:not(.source-list)) {
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .prose :global(ol:not(.source-list) > li) {
+    position: relative;
+    min-height: var(--text-step-number);
+    margin-bottom: var(--space-5);
+    padding-left: var(--space-8);
+    counter-increment: step;
+  }
+
+  .prose :global(ol:not(.source-list) > li::before) {
+    content: counter(step);
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: var(--font-heading);
+    font-size: var(--text-step-number);
+    line-height: 1;
+  }
+
+  .updated {
+    margin-top: var(--space-7);
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+  }
+</style>

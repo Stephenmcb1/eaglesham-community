@@ -23,7 +23,7 @@ TODO: Name of the group and contact email. Who is responsible for any personal i
 
 ## Your rights
 
-You can ask what information we hold about you, and ask us to correct or delete it. Contact us at TODO. If you're unhappy with how we've handled your information, you can complain to the Information Commissioner's Office: https://ico.org.uk
+You can ask what information we hold about you, and ask us to correct or delete it. Contact us at TODO. If you're unhappy with how we've handled your information, you can [complain to the Information Commissioner's Office](https://ico.org.uk).
 
 ## Responding to the council
 

@@ -81,6 +81,8 @@ const pages = defineCollection({
     description: z.string(),
     // true = hidden on the live site (still shown with npm run dev)
     draft: z.boolean().default(false),
+    // Optional: listed under "Sources" at the end of the page
+    sources: z.array(source).default([]),
     updated: z.coerce.date(),
   }),
 });

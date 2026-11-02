@@ -130,6 +130,11 @@ blockquote {
   max-width: var(--measure);
 }
 
+/* The intro paragraph under a page title */
+.lead {
+  font-size: var(--text-lead);
+}
+
 strong,
 b {
   font-weight: var(--weight-bold);
