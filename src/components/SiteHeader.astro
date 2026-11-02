@@ -1,0 +1,164 @@
+---
+// Site name and main navigation, with a 4px green rule beneath (style guide §6).
+import { site } from "../config/site";
+
+// The five main sections (brief §6). Until Phase 2, "The issues" goes to a
+// section on The plan page. Step 4 must give that section id="the-issues".
+const navItems = [
+  { label: "The plan", href: "/the-plan/" },
+  { label: "The sites", href: "/sites/" },
+  { label: "The issues", href: "/the-plan/#the-issues" },
+  { label: "How to respond", href: "/respond/" },
+  { label: "About", href: "/about/" },
+];
+
+// Mark the link for the section we're in, e.g. /sites/waulkers-loan/ is in "The sites".
+// "The issues" is skipped because it shares a page with "The plan" for now.
+const currentPath = Astro.url.pathname;
+function isCurrent(href: string): boolean {
+  if (href.includes("#")) return false;
+  return currentPath === href || currentPath.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="site-name" href="/">{site.name}</a>
+
+    {/* Hidden until the script runs, so without JavaScript the links simply show */}
+    <button
+      class="button button-secondary menu-button"
+      type="button"
+      aria-expanded="false"
+      aria-controls="main-nav"
+      hidden
+    >
+      Menu
+    </button>
+
+    <nav id="main-nav" aria-label="Main">
+      <ul class="nav-list">
+        {
+          navItems.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script src="../scripts/menu.ts"></script>
+
+<style>
+  .site-header {
+    border-bottom: 4px solid var(--colour-orry);
+  }
+
+  .header-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-6);
+    padding-block: var(--space-3);
+  }
+
+  /*
+    The style guide sets the site name in Caslon Text at 24px, which is the one
+    exception to its "no Caslon below 28px" rule.
+  */
+  .site-name {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target);
+    font-family: var(--font-heading);
+    font-size: var(--text-h3);
+    line-height: var(--leading-heading);
+    color: var(--colour-text);
+    text-decoration: none;
+  }
+
+  .site-name:hover {
+    color: var(--colour-text);
+    text-decoration-line: underline;
+  }
+
+  nav {
+    margin-left: auto;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-list li {
+    max-width: none;
+  }
+
+  .nav-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target);
+  }
+
+  /* The page you're on: bold, with a heavier underline */
+  .nav-list a[aria-current="page"] {
+    font-weight: var(--weight-bold);
+    text-decoration-thickness: 3px;
+  }
+
+  /* ---------- Phones and small tablets, with JavaScript on ---------- */
+  /* The button sits on the same line as the site name; the opened list goes below */
+  @media (max-width: 899.98px) {
+    /* Let the name wrap onto two lines so the Menu button fits beside it */
+    .site-name {
+      flex: 1 1 0;
+    }
+
+    .menu-button {
+      margin-left: auto;
+      padding-inline: var(--space-4);
+    }
+
+    /* Closed menu: hide the list (only once the script has shown the button) */
+    .menu-button:not([hidden])[aria-expanded="false"] + nav {
+      display: none;
+    }
+
+    /* Open menu: one link per line, full width */
+    .menu-button:not([hidden]) + nav {
+      flex-basis: 100%;
+      margin-left: 0;
+      border-top: var(--border-thin) solid var(--colour-rule);
+    }
+
+    .menu-button:not([hidden]) + nav .nav-list {
+      flex-direction: column;
+    }
+
+    .menu-button:not([hidden]) + nav li {
+      border-bottom: var(--border-thin) solid var(--colour-rule);
+    }
+
+    .menu-button:not([hidden]) + nav a {
+      width: 100%;
+    }
+  }
+
+  /* ---------- Desktop: the button is never needed ---------- */
+  @media (min-width: 900px) {
+    .menu-button {
+      display: none;
+    }
+  }
+</style>

@@ -12,6 +12,10 @@ export const site = {
   // Left empty for now, which is why astro.config.mjs only sets `site` when this has a value.
   url: "",
 
+  // false keeps every page out of search results while the site is being built.
+  // TODO: set to true at launch (Phase 1, step 10).
+  indexable: false,
+
   // Default text for link previews (Facebook, WhatsApp) when a page doesn't set its own.
   description:
     "What East Renfrewshire Council's Local Development Plan 3 proposes for Eaglesham and Waterfoot, and how to respond before Friday 22 January 2027.",

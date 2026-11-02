@@ -1,99 +1,24 @@
 ---
-// Temporary holding page (Phase 1, step 1). It proves the build and deploy work.
-// Replaced by the real home page in step 8.
-import "../styles/tokens.css";
+// Temporary holding page. Replaced by the real home page in Phase 1, step 8.
+import BaseLayout from "../layouts/BaseLayout.astro";
 import { site } from "../config/site";
-
-// Show the deadline as "Friday 22 January 2027". timeZone "UTC" stops the date
-// shifting by a day depending on where the build runs.
-// The weekday is formatted separately because en-GB adds a comma after it ("Friday, 22…").
-const deadlineDate = new Date(site.deadline);
-const weekday = deadlineDate.toLocaleDateString("en-GB", { weekday: "long", timeZone: "UTC" });
-const dayMonthYear = deadlineDate.toLocaleDateString("en-GB", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  timeZone: "UTC",
-});
-const deadline = `${weekday} ${dayMonthYear}`;
 ---
 
-<!doctype html>
-<html lang="en-GB">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{site.name}</title>
-    <meta name="description" content={site.description} />
-    <!-- Keep the holding page out of search results until launch -->
-    <meta name="robots" content="noindex" />
-  </head>
-  <body>
-    <main>
-      <h1>{site.name}</h1>
-      <p>
-        This site is being built. It will explain what Local Development Plan 3 (LDP3) proposes
-        for Eaglesham and Waterfoot, and how to respond.
-      </p>
-      <p>Responses to LDP3 close on <strong>{deadline}</strong>.</p>
-      <p>
-        In the meantime, read about LDP3 on <a href={site.council.ldp3Page}
-          >East Renfrewshire Council's website</a
-        >.
-      </p>
-    </main>
-    <footer>
-      <p>
-        This site is run by local volunteers. It is independent of East Renfrewshire Council and
-        of any developer.
-      </p>
-    </footer>
-  </body>
-</html>
+<BaseLayout showCountdown>
+  <h1>{site.name}</h1>
+  <p class="lead">
+    This site is being built. It will explain what Local Development Plan 3 (LDP3) proposes for
+    Eaglesham and Waterfoot, and how to respond.
+  </p>
+  <p>
+    In the meantime, read about LDP3 on <a href={site.council.ldp3Page}
+      >East Renfrewshire Council's website</a
+    >.
+  </p>
+</BaseLayout>
 
 <style>
-  body {
-    margin: 0;
-    padding: var(--space-7) var(--gutter);
-    background: var(--colour-background);
-    color: var(--colour-text);
-    font-family: var(--font-body);
-    font-size: var(--text-base);
-    line-height: var(--leading-body);
-  }
-
-  main,
-  footer {
-    max-width: var(--measure);
-  }
-
-  h1 {
-    font-family: var(--font-heading);
-    font-size: var(--text-h1);
-    font-weight: var(--weight-regular);
-    line-height: var(--leading-heading);
-  }
-
-  a {
-    color: var(--colour-link);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.15em;
-  }
-
-  a:hover {
-    color: var(--colour-link-hover);
-    text-decoration-thickness: 2px;
-  }
-
-  a:focus-visible {
-    outline: 3px solid var(--colour-whinstone);
-    outline-offset: 2px;
-    box-shadow: var(--focus-ring);
-  }
-
-  footer {
-    margin-top: var(--space-8);
-    font-size: var(--text-sm);
-    color: var(--colour-text-muted);
+  .lead {
+    font-size: var(--text-lead);
   }
 </style>

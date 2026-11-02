@@ -1,0 +1,74 @@
+---
+/*
+  Wraps every page: the <head>, skip link, deadline strip, header, main content and footer.
+  Use it like this:
+    <BaseLayout title="The plan" description="LDP3 in plain English">…</BaseLayout>
+*/
+
+// Fonts, self-hosted from the Fontsource packages: only the weights the style guide uses.
+// Browsers download each file only when a page actually uses that weight.
+import "@fontsource/atkinson-hyperlegible-next/400.css";
+import "@fontsource/atkinson-hyperlegible-next/400-italic.css";
+import "@fontsource/atkinson-hyperlegible-next/700.css";
+import "@fontsource/libre-caslon-text/400.css";
+import "@fontsource/libre-caslon-text/700.css";
+import "@fontsource/libre-caslon-display/400.css";
+
+// Design tokens first, so global.css can use them
+import "../styles/tokens.css";
+import "../styles/global.css";
+
+import { site } from "../config/site";
+import DeadlineStrip from "../components/DeadlineStrip.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+interface Props {
+  // The page's own title, e.g. "The plan". Leave out on the home page.
+  title?: string;
+  // One or two sentences for search results and link previews
+  description?: string;
+  // Show "That's N days away." in the deadline strip (home and respond pages)
+  showCountdown?: boolean;
+}
+
+const { title, description = site.description, showCountdown = false } = Astro.props;
+
+// "The plan – Site name", or just the site name on the home page
+const fullTitle = title ? `${title} – ${site.name}` : site.name;
+
+// Full web address of this page, for link previews. Only possible once the domain is set.
+const canonicalUrl = site.url ? new URL(Astro.url.pathname, site.url).href : undefined;
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {!site.indexable && <meta name="robots" content="noindex" />}
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+    <!-- Link previews (Facebook, WhatsApp). TODO: og:image in Phase 1, step 9. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title ?? site.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="en_GB" />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <DeadlineStrip showCountdown={showCountdown} />
+    <SiteHeader />
+    <!-- tabindex="-1" lets the skip link move keyboard focus here -->
+    <main id="main" tabindex="-1">
+      <div class="container">
+        <slot />
+      </div>
+    </main>
+    <SiteFooter />
+  </body>
+</html>

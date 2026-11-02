@@ -1,0 +1,102 @@
+---
+// Footer on every page: three groups of links and the independence line (style guide §6).
+import { site } from "../config/site";
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="groups">
+      <section aria-labelledby="footer-about">
+        <h2 id="footer-about">About this site</h2>
+        <ul>
+          <li><a href="/about/">Who we are</a></li>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/accessibility/">Accessibility</a></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="footer-plan">
+        <h2 id="footer-plan">The plan</h2>
+        <ul>
+          <li><a href="/the-plan/">LDP3 explained</a></li>
+          <li><a href="/sites/">The three sites</a></li>
+          <li><a href="/respond/">How to respond</a></li>
+          <li><a href={site.council.ldp3Page}>The council's LDP3 page</a></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="footer-contact">
+        <h2 id="footer-contact">Contact</h2>
+        {
+          site.contactEmail ? (
+            <p>
+              Email us at <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+            </p>
+          ) : (
+            // TODO: shows once site.contactEmail is set in src/config/site.ts
+            <p>
+              <a href="/about/">Find out how to get in touch</a>
+            </p>
+          )
+        }
+      </section>
+    </div>
+
+    <p class="independence">
+      This site is run by local volunteers. It is independent of East Renfrewshire Council and of
+      any developer.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-7);
+    background: var(--colour-surface);
+    font-size: var(--text-sm);
+  }
+
+  .groups {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  /* Three groups side by side on wider screens */
+  @media (min-width: 600px) {
+    .groups {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Atkinson bold: Caslon is never used below 28px */
+  h2 {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Each link is at least 48px tall so it's easy to tap (style guide §5) */
+  li a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .independence {
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: var(--border-thin) solid var(--colour-rule);
+    font-size: var(--text-base);
+  }
+</style>

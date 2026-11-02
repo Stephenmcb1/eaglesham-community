@@ -1,0 +1,66 @@
+---
+// The green band at the very top of every page with the consultation deadline (style guide §6).
+import { site } from "../config/site";
+import { formatDate, formatDateShort, isAfterDeadline } from "../utils/dates";
+
+interface Props {
+  // Add "That's N days away." (home and respond pages only)
+  showCountdown?: boolean;
+}
+
+const { showCountdown = false } = Astro.props;
+
+// Worked out when the site is built. After the deadline, one rebuild switches the message.
+const closed = isAfterDeadline(site.deadline);
+---
+
+<div class="deadline-strip">
+  <p class="container">
+    {
+      closed ? (
+        <>The LDP3 consultation closed on {formatDateShort(site.deadline)}.</>
+      ) : (
+        <>
+          Responses to LDP3 close on <strong>{formatDate(site.deadline)}</strong>.
+          {/* Filled in by the script below. Left empty if JavaScript is off. */}
+          {showCountdown && <span data-countdown data-deadline={site.deadline} />}{" "}
+          <a href="/respond/">How to respond</a>
+        </>
+      )
+    }
+  </p>
+</div>
+
+{showCountdown && !closed && <script src="../scripts/countdown.ts"></script>}
+
+<style>
+  .deadline-strip {
+    background: var(--colour-orry);
+    color: var(--colour-on-action);
+  }
+
+  p {
+    /* .container sets the width; p's own 65ch limit doesn't apply here */
+    max-width: var(--container-max);
+    margin: 0;
+    padding-block: var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  @media (min-width: 600px) {
+    p {
+      font-size: var(--text-base);
+    }
+  }
+
+  a {
+    color: var(--colour-on-action);
+    font-weight: var(--weight-bold);
+    /* Keep "How to respond" together on one line */
+    white-space: nowrap;
+  }
+
+  a:hover {
+    color: var(--colour-on-action);
+  }
+</style>
