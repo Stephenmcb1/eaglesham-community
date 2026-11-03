@@ -237,6 +237,8 @@ Apply it with `:focus-visible`. Never remove outlines without replacing them.
 - Errors: a Red line left border on the field, an error message in text above the input naming the problem and the fix, and a summary at the top of the form.
 - Confirmation (for example, "Copied") is announced through `aria-live="polite"`.
 
+**Video.** A 16:9 Harl box with an Orry play button, the line "Play the video" and a note that it plays from YouTube. No YouTube thumbnail and no player until the visitor presses play, so nothing loads from Google before then. Then it swaps in the `youtube-nocookie.com` player with captions on. A heading above (the video's title) and a one- or two-sentence summary below, for people who can't watch. Without a link yet, a "Video to come" box with the TODO outline. Component: `VideoPlayer.astro`.
+
 **Details/FAQ.** Native `<details>` and `<summary>`, with a 1px Rule between items. The summary is in Atkinson bold, with a plus/minus marker drawn in CSS.
 
 **Footer.** Harl background, 16–18px. It has three groups (About this site, The plan, Contact) and the independence line: "This site is run by local volunteers. It is independent of East Renfrewshire Council and of any developer." Licence line once agreed.

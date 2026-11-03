@@ -1,0 +1,158 @@
+---
+/*
+  A YouTube video, or a "video to come" placeholder (style guide §6, "Video").
+
+  - With a YouTube link: shows a play button. Nothing loads from YouTube until someone
+    presses it, not even the preview picture, so visiting the page shares nothing with
+    Google. Then src/scripts/video.ts swaps in YouTube's privacy-enhanced player
+    (youtube-nocookie.com). Without JavaScript the button is a plain link to YouTube.
+  - Without a link but with a title: a placeholder with the TODO outline, so the
+    committee can see where a video is planned.
+  - With neither: nothing.
+
+  The summary sits under the video for people who can't watch it.
+*/
+interface Props {
+  url?: string | null;
+  title?: string | null;
+  summary?: string | null;
+}
+
+const { url, title, summary } = Astro.props;
+
+// The video's id from any common YouTube link:
+// youtu.be/ID, youtube.com/watch?v=ID, youtube.com/shorts/ID, /embed/ID or /live/ID
+function youTubeId(link: string): string | null {
+  const address = new URL(link);
+  if (address.hostname === "youtu.be") return address.pathname.slice(1) || null;
+  const fromQuery = address.searchParams.get("v");
+  if (fromQuery) return fromQuery;
+  const fromPath = address.pathname.match(/^\/(shorts|embed|live)\/([\w-]+)/);
+  return fromPath ? fromPath[2] : null;
+}
+
+const id = url ? youTubeId(url) : null;
+const heading = title || "Video";
+// A unique id for the heading, so the figure can be labelled by it
+const headingId = `video-${(id ?? heading).toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+---
+
+{
+  id ? (
+    <section class="video" aria-labelledby={headingId}>
+      <h2 id={headingId}>{heading}</h2>
+      <div class="frame">
+        <a class="start" href={`https://www.youtube.com/watch?v=${id}`} data-video={id} data-title={heading}>
+          <span class="play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="32" height="32">
+              <path d="M8 5v14l11-7z" fill="currentColor" />
+            </svg>
+          </span>
+          <span class="start-text">Play the video</span>
+          <span class="start-note">It plays from YouTube, which may store cookies once you press play.</span>
+        </a>
+      </div>
+      {summary && <p class="summary">{summary}</p>}
+    </section>
+  ) : (
+    title && (
+      <section class="video" aria-labelledby={headingId}>
+        <h2 id={headingId}>{heading}</h2>
+        <div class="frame placeholder todo">
+          <p>
+            <strong>Video to come.</strong>
+            {summary && <> {summary}</>}
+          </p>
+          <p>TODO: add the YouTube link in Pages CMS.</p>
+        </div>
+      </section>
+    )
+  )
+}
+
+<script src="../scripts/video.ts"></script>
+
+<style>
+  .video {
+    max-width: 48rem;
+    margin-block: var(--space-7);
+  }
+
+  /* 16:9, the shape of a YouTube video */
+  .frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--colour-surface);
+  }
+
+  .frame :global(iframe) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    height: 100%;
+    padding: var(--space-4);
+    border: var(--border-thin) solid var(--colour-rule);
+    color: var(--colour-text);
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .play {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: var(--colour-action);
+    color: var(--colour-on-action);
+    transition: background-color var(--duration-quick) var(--ease-out);
+  }
+
+  .start:hover .play {
+    background: var(--colour-action-hover);
+  }
+
+  .start-text {
+    font-weight: var(--weight-bold);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .start-note {
+    max-width: 32ch;
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-5);
+    background: var(--colour-background);
+  }
+
+  .placeholder p {
+    max-width: 40ch;
+  }
+
+  .placeholder p:last-child {
+    margin-bottom: 0;
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .summary {
+    margin-top: var(--space-3);
+  }
+</style>

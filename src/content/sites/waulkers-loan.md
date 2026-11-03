@@ -21,6 +21,9 @@ sources:
   - title: "Eaglesham residents urged to have their say over controversial LDP3 development proposals, The Eaglesham Echo, 2 September 2026"
     url: "https://theeagleshamecho.substack.com/p/eaglesham-residents-urged-to-have"
 updated: 2026-11-02
+videoUrl: ""
+videoTitle: "A walk round Waulkers Loan"
+videoSummary: "A short walk along the edge of the site from public paths, showing where the homes would go."
 notes: |
   Homes: From The Eaglesham Echo. TODO: confirm in the Proposed LDP3.
   Area: Measured from the council's map data. TODO: check against the area stated in the plan.

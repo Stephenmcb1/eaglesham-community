@@ -32,6 +32,7 @@ The website updates itself about two minutes later. Refresh the page in your bro
 - **Change "Last updated"** to today's date when you change facts.
 - **Use "Notes for the committee"** for reminders. Only editors see these notes. They never appear on the website.
 - **To hide a page** that isn't ready, tick **Hide this page from the live site**.
+- **Videos:** the home page and each site have a "Video title", "Video link" and "What the video shows". Upload the video to YouTube first, then paste its link. Until there's a link, the site shows a "Video to come" box. Clear the title and link to show no video. Turn on captions in YouTube, because many people watch with the sound off.
 - **Headings:** use "Heading 2" for each section of a page. Don't make text bold to look like a heading.
 
 ## Writing for the site

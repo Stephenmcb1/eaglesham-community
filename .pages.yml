@@ -48,6 +48,18 @@ components:
     label: Notes for the committee
     description: Reminders and things to check. Only editors see these. They never appear on the site.
     type: text
+  videoUrl:
+    label: Video link
+    description: The YouTube link, e.g. https://youtu.be/abc123. Leave empty until the video is ready, and a "video to come" box shows instead.
+    type: string
+  videoTitle:
+    label: Video title
+    description: Shown above the video. Leave this and the link empty to show no video at all.
+    type: string
+  videoSummary:
+    label: What the video shows
+    description: One or two sentences, shown under the video for people who can't watch it.
+    type: text
   body:
     label: Page text
     description: Use "Heading 2" for section headings. Write TODO in any paragraph that still needs work, and it gets a dashed outline on the site.
@@ -120,6 +132,12 @@ content:
         default: false
       - name: updated
         component: updated
+      - name: videoTitle
+        component: videoTitle
+      - name: videoUrl
+        component: videoUrl
+      - name: videoSummary
+        component: videoSummary
       - name: body
         label: Intro paragraph
         description: The paragraph under the headline. Keep it to two or three sentences.
@@ -239,6 +257,12 @@ content:
         description: One or two sentences, shown at the top of the site's page and on the sites list.
         type: text
         required: true
+      - name: videoTitle
+        component: videoTitle
+      - name: videoUrl
+        component: videoUrl
+      - name: videoSummary
+        component: videoSummary
       - name: updated
         component: updated
       - name: body

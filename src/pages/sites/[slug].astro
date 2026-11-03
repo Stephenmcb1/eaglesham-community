@@ -8,6 +8,7 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import SourceList from "../../components/SourceList.astro";
+import VideoPlayer from "../../components/VideoPlayer.astro";
 import SiteMap from "../../components/SiteMap.astro";
 import { formatDate } from "../../utils/dates";
 
@@ -60,6 +61,8 @@ const areaText =
       <Content />
     </div>
   </div>
+
+  <VideoPlayer url={facts.videoUrl} title={facts.videoTitle} summary={facts.videoSummary} />
 
   <SiteMap sites={allSites} focus={facts.mapFeatureId} />
 

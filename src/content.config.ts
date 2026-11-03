@@ -33,6 +33,25 @@ const source = z.object({
   page: z.union([z.string(), z.number()]).nullish(),
 });
 
+// An optional video (sites and pages). Leave videoUrl empty to show a "video to come"
+// placeholder with videoTitle; leave videoTitle empty too to show nothing.
+// Only YouTube links are accepted: the site plays them from YouTube's privacy-enhanced
+// address, and only once someone presses play.
+const video = {
+  videoUrl: z
+    .union([
+      z.url().refine((url) => /^https:\/\/(www\.|m\.)?(youtube\.com|youtu\.be)\//.test(url), {
+        message: "Must be a YouTube link, starting https://www.youtube.com/ or https://youtu.be/",
+      }),
+      z.literal(""),
+    ])
+    .nullish()
+    .transform((url) => url ?? ""),
+  videoTitle: z.string().nullish(),
+  // One or two sentences on what the video shows. Shown under it, for people who can't watch.
+  videoSummary: z.string().nullish(),
+};
+
 // Notes for the committee: shown in Pages CMS, never on the site.
 // (Use this instead of # comments, which Pages CMS removes when it saves.)
 const notes = z.string().nullish();
@@ -71,6 +90,7 @@ const sites = defineCollection({
     sources: z.array(source).min(1, "Every site needs at least one source"),
     updated: z.coerce.date(),
     notes,
+    ...video,
   }),
 });
 
@@ -102,6 +122,8 @@ const pages = defineCollection({
     faq: z.array(z.object({ question: z.string(), answer: z.string() })).default([]),
     updated: z.coerce.date(),
     notes,
+    // Used on the home page only, for now
+    ...video,
   }),
 });
 

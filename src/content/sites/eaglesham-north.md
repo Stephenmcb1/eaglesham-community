@@ -23,6 +23,9 @@ sources:
   - title: "'Eaglesham North' proposals central to council's development plans for East Ren, The Eaglesham Echo, 1 September 2026"
     url: "https://theeagleshamecho.substack.com/p/breaking-eaglesham-north-proposals"
 updated: 2026-11-02
+videoUrl: ""
+videoTitle: "A walk round Eaglesham North"
+videoSummary: "A short walk along the edge of the site from public paths, showing where the homes would go."
 notes: |
   Area: Measured from the council's map data. About 31.5 ha of this stays green belt in LDP3 (the green network). TODO: check against the area stated in the plan.
   Developer: As reported by The Eaglesham Echo. TODO: check whether the plan names a developer.

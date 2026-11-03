@@ -7,6 +7,7 @@ import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import VillagePlan from "../components/VillagePlan.astro";
 import SiteSchedule from "../components/SiteSchedule.astro";
+import VideoPlayer from "../components/VideoPlayer.astro";
 import { site } from "../config/site";
 import { formatDate } from "../utils/dates";
 
@@ -53,6 +54,8 @@ const issues = (await getCollection("issues")).sort((a, b) => a.data.order - b.d
     </div>
     <p><a href="/the-plan/#the-issues">Read about the issues</a></p>
   </section>
+
+  <VideoPlayer url={home.data.videoUrl} title={home.data.videoTitle} summary={home.data.videoSummary} />
 
   <section aria-labelledby="steps-heading">
     <h2 id="steps-heading">How to respond in three steps</h2>

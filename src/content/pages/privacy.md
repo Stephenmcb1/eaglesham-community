@@ -13,11 +13,13 @@ TODO: Name of the group and contact email. Who is responsible for any personal i
 
 ## What this site collects
 
-**No cookies.** This site doesn't use cookies or tracking scripts.
+**No cookies.** This site doesn't use cookies or tracking scripts. The one exception is YouTube videos, and only if you choose to play one (see below).
 
 **Visit counts.** We use Cloudflare Web Analytics to count page visits. It doesn't use cookies and doesn't identify you. TODO: link to Cloudflare's privacy information.
 
 **Maps.** The maps on the sites pages use street map images from [OpenStreetMap](https://www.openstreetmap.org). To show them, your browser downloads the images from OpenStreetMap's servers, which see your IP address, as any website does. [OpenStreetMap's privacy policy](https://osmfoundation.org/wiki/Privacy_Policy) explains what they do with it. If you turn JavaScript off, you see a simple drawing instead and nothing is downloaded from OpenStreetMap.
+
+**Videos.** Our videos are on YouTube. Nothing is loaded from YouTube until you press "Play the video". Then the video plays from YouTube's privacy-enhanced service (youtube-nocookie.com), and YouTube may store cookies or similar information on your device. [Google's privacy policy](https://policies.google.com/privacy) explains what they do with it.
 
 **The response helper.** When you use the response helper, everything you type stays on your own device. Nothing is sent to us or anyone else. Your draft is saved in your browser so it survives a reload, and you can clear it at any time with "Clear my draft".
 

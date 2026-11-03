@@ -60,6 +60,34 @@ const labels = siteShapes.features.map((feature) => {
   };
 });
 
+// Place names, so people can find their way: the village centre (on the Orry) and the
+// main roads in. Each road's name sits halfway along the part of it inside the drawing.
+const ROAD_NAMES = ["Glasgow Road", "East Kilbride Road", "Humbie Road", "Moor Road"];
+const toPercent = ([x, y]: [number, number]) => ({ left: (x / view.width) * 100, top: (y / view.height) * 100 });
+const inFrame = (p: { left: number; top: number }) => p.left > 8 && p.left < 92 && p.top > 8 && p.top < 92;
+
+const roadLabels = ROAD_NAMES.flatMap((name) => {
+  // Every point of this road that's inside the drawing, as percentages
+  const points = streets.features
+    .filter((f) => f.properties.name === name)
+    .flatMap((f) => (f.geometry.coordinates as number[][]).map((p) => toPercent(view.project(p))))
+    .filter(inFrame);
+  if (points.length === 0) return [];
+  // Sort the points along the way the road mostly runs (across or up and down)
+  const spread = (key: "left" | "top") => Math.max(...points.map((p) => p[key])) - Math.min(...points.map((p) => p[key]));
+  const along = spread("left") >= spread("top") ? "left" : "top";
+  const sorted = [...points].sort((a, b) => a[along] - b[along]);
+  // From the middle part of the road, pick the spot furthest from the site labels,
+  // so road names don't crowd them. (Distances are rough: the drawing is 3:2, not square.)
+  const middlePart = sorted.slice(Math.floor(sorted.length * 0.2), Math.ceil(sorted.length * 0.8));
+  const clearance = (p: { left: number; top: number }) =>
+    Math.min(...labels.map((l) => Math.hypot((p.left - l.left) * 1.5, p.top - l.top)));
+  const middle = middlePart.reduce((best, p) => (clearance(p) > clearance(best) ? p : best));
+  return [{ name, ...middle }];
+});
+
+const villageLabel = orry.length > 0 ? toPercent(view.project(labelPointOf(orry[0]))) : null;
+
 const scaleMetres = scaleBarLength(view.metresPerUnit, view.width);
 const scaleWidth = (scaleMetres / view.metresPerUnit / view.width) * 100;
 const scaleText = scaleMetres >= 1000 ? `${scaleMetres / 1000} km` : `${scaleMetres} m`;
@@ -92,6 +120,22 @@ const description = `A plan of Eaglesham showing the ${labels.length} proposed h
       ))
     }
 
+    {/* Place names: quieter than the site labels (no box), so the sites still stand out */}
+    {
+      villageLabel && (
+        <span class="place village" style={`left: ${villageLabel.left}%; top: ${villageLabel.top}%`} aria-hidden="true">
+          <span>Eaglesham</span>
+        </span>
+      )
+    }
+    {
+      roadLabels.map((road) => (
+        <span class="place road" style={`left: ${road.left}%; top: ${road.top}%`} aria-hidden="true">
+          <span>{road.name}</span>
+        </span>
+      ))
+    }
+
     <span class="north-arrow" aria-hidden="true">
       N <svg viewBox="0 0 10 14" width="10" height="14"><path d="M5 0 10 14 5 10 0 14Z" fill="currentColor"></path></svg>
     </span>
@@ -100,6 +144,14 @@ const description = `A plan of Eaglesham showing the ${labels.length} proposed h
       <span class="scale-bar-text">{scaleText}</span>
     </span>
   </div>
+
+  {/* The key, below the drawing as on the sites map (style guide §7) */}
+  <ul class="key" aria-label="Key">
+    <li><span class="swatch swatch-site" aria-hidden="true"></span>Proposed housing site (red line)</li>
+    <li><span class="swatch swatch-orry" aria-hidden="true"></span>The Orry, at the centre of the old village</li>
+    <li><span class="swatch swatch-main" aria-hidden="true"></span>Main roads</li>
+    <li><span class="swatch swatch-water" aria-hidden="true"></span>Burns and rivers</li>
+  </ul>
 
   <figcaption>
     Indicative only. See <a href={site.council.ldp3Page}>the council's LDP3 maps</a> for exact boundaries.
@@ -141,9 +193,11 @@ const description = `A plan of Eaglesham showing the ${labels.length} proposed h
     fill: var(--colour-moss);
   }
 
+  /* Dotted, so burns differ from streets by more than colour (matches the key) */
   .water {
     stroke: var(--colour-stone);
-    stroke-width: 1.5px;
+    stroke-width: 2px;
+    stroke-dasharray: 2 3;
   }
 
   .street {
@@ -215,6 +269,43 @@ const description = `A plan of Eaglesham showing the ${labels.length} proposed h
     }
   }
 
+  /* Place names: Stone text with a white edge so streets don't run through the letters */
+  .place {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  .place > span {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+    font-style: italic;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-shadow:
+      0 0 3px var(--colour-background),
+      0 0 3px var(--colour-background),
+      0 0 3px var(--colour-background);
+  }
+
+  /* The village name sits just below the Orry, so it doesn't cover the green */
+  .village > span {
+    transform: translate(-50%, 0.75rem);
+    color: var(--colour-text);
+    font-size: var(--text-base);
+    font-style: normal;
+    font-weight: var(--weight-bold);
+  }
+
+  /* Phones: only the village name, so the drawing doesn't get crowded */
+  @media (max-width: 599.98px) {
+    .road {
+      display: none;
+    }
+  }
+
   .north-arrow,
   .scale-bar {
     position: absolute;
@@ -253,6 +344,47 @@ const description = `A plan of Eaglesham showing the ${labels.length} proposed h
     height: var(--space-2);
     border: 2px solid currentColor;
     border-top: 0;
+  }
+
+  /* ---------- Key ---------- */
+  .key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    margin: var(--space-3) 0 var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  .key li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .swatch {
+    flex: none;
+    display: inline-block;
+    width: 2rem;
+  }
+
+  /* Each swatch uses line style as well as colour, so the key doesn't rely on colour alone */
+  .swatch-site {
+    height: 1.25rem;
+    border: var(--border-site) solid var(--colour-site-boundary);
+  }
+
+  .swatch-orry {
+    height: 1.25rem;
+    background: var(--colour-moss);
+  }
+
+  .swatch-main {
+    border-top: 2px solid var(--colour-whinstone);
+  }
+
+  .swatch-water {
+    border-top: 2px dotted var(--colour-stone);
   }
 
   figcaption {
