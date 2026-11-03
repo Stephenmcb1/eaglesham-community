@@ -1,7 +1,7 @@
 ---
 // "Sources" heading and numbered list at the end of a page (style guide §6, "Source notes").
 interface Props {
-  sources: { title: string; url: string; page?: string | number }[];
+  sources: { title: string; url: string; page?: string | number | null }[];
 }
 
 const { sources } = Astro.props;

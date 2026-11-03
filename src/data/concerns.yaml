@@ -7,17 +7,18 @@
 #   issue   traffic-and-transport | wildlife-and-biodiversity | infrastructure | general
 #   label   what the resident ticks (short, plain)
 #   text    the sentence added to their response (first person, calm, specific, no claims we can't support)
-#   sites   "all", or a list of site ids: eaglesham-north, holehouse-road, waulkers-loan
+#   sites   a list of site ids: eaglesham-north, holehouse-road, waulkers-loan
 #   policy  optional policy reference, for the committee's checking (not shown to residents)
 #   draft   true = hidden on the live site until the group approves the wording
 #
 # All entries below are DRAFTS for the committee to review.
+# Easier: edit these in Pages CMS ("Response helper points"), which explains each field.
 
 - id: traffic-through-village
   issue: traffic-and-transport
   label: "Extra traffic through the village centre"
   text: "I am concerned about the extra traffic these homes would bring through the narrow streets of Eaglesham's conservation village. The plan should show how traffic will be managed, and the measures should be in place before homes are occupied."
-  sites: all
+  sites: [eaglesham-north, holehouse-road, waulkers-loan]
   policy: "NPF4 Policy 13; NPF4 Policy 7. TODO: LDP3 transport policy"
   draft: true
 
@@ -25,7 +26,7 @@
   issue: traffic-and-transport
   label: "Poor public transport"
   text: "Public transport to and from Eaglesham is limited, so residents of new homes would rely on cars. The plan should commit to better bus services before any homes are built."
-  sites: all
+  sites: [eaglesham-north, holehouse-road, waulkers-loan]
   policy: "NPF4 Policy 13; NPF4 Policy 15"
   draft: true
 
@@ -33,7 +34,7 @@
   issue: wildlife-and-biodiversity
   label: "Effects on wildlife"
   text: "These sites and their hedgerows, trees and field edges support wildlife, including protected species. Full ecological surveys should be published and taken into account before these sites are confirmed in the plan."
-  sites: all
+  sites: [eaglesham-north, holehouse-road, waulkers-loan]
   policy: "NPF4 Policy 3; NPF4 Policy 4"
   draft: true
 
@@ -49,7 +50,7 @@
   issue: infrastructure
   label: "School places"
   text: "Children from these homes would need places at Eaglesham Primary School and Mearns Castle High School. The plan should show how and when extra capacity will be provided."
-  sites: all
+  sites: [eaglesham-north, holehouse-road, waulkers-loan]
   policy: "NPF4 Policy 18. TODO: LDP3 education evidence"
   draft: true
 
@@ -57,6 +58,6 @@
   issue: infrastructure
   label: "Services in place first"
   text: "The council describes LDP3 as 'infrastructure first'. For Eaglesham, I would like the plan to set out which roads, school, health and drainage improvements will be delivered, by whom, and before how many homes are built."
-  sites: all
+  sites: [eaglesham-north, holehouse-road, waulkers-loan]
   policy: "NPF4 Policy 18; Section 75 agreements"
   draft: true

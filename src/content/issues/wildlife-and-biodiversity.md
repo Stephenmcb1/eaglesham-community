@@ -3,7 +3,6 @@ title: Wildlife and biodiversity
 order: 2
 summary: "What lives on and around the proposed sites, and how the plan protects it."
 policies:
-  # TODO: check exact policy titles and wording against NPF4 and the Proposed LDP3
   - "NPF4 Policy 3: Biodiversity"
   - "NPF4 Policy 4: Natural places"
   - "NPF4 Policy 6: Forestry, woodland and trees"
@@ -13,12 +12,10 @@ sources:
   - title: "TODO"
     url: ""
 updated: 2026-11-02
+notes: |
+  Policies: TODO: check exact policy titles and wording against NPF4 and the Proposed LDP3.
+  IMPORTANT: never give the location of a badger sett or a bat roost on this page or on any map. Describe them in general terms only ("bats have been seen feeding along the field edges").
 ---
-
-<!--
-IMPORTANT: never give the location of a badger sett or a bat roost on this page or on any map.
-Describe them in general terms only ("bats have been seen feeding along the field edges").
--->
 
 ## Why it matters
 

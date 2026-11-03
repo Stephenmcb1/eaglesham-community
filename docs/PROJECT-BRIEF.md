@@ -52,7 +52,7 @@ Measures:
 |---|---|---|
 | Residents of Eaglesham and Waterfoot, all ages, many older | What's proposed, what it means for them, how to respond, by when | Plain English, large readable text, works well on phones, no jargon without explanation |
 | Residents arriving from Facebook or WhatsApp links | The answer to "what is this and what do I do?" in one screen | Strong link previews (Open Graph image), a clear first screen, a deadline on every page |
-| Committee members editing content | A simple way to update text | Content in Markdown files with obvious fields, editable in GitHub's web editor |
+| Committee members editing content | A simple way to update text | Content in Markdown files with obvious fields, edited through Pages CMS (a simple form in the browser) |
 | Councillors, council officers, the Reporter, the press | A credible, sourced account of local concerns | Every fact sourced, a calm tone, opinion clearly separated from fact |
 
 ---
@@ -238,7 +238,7 @@ A list of requests the group has made under the Freedom of Information (Scotland
 
 ## 8. Content model
 
-Content lives in Markdown and YAML so committee members can edit it in GitHub's web editor. Files starting with `_` are templates and are not published.
+Content lives in Markdown and YAML so committee members can edit it through Pages CMS (see `.pages.yml` and `docs/EDITING-GUIDE.md`). Files starting with `_` are templates and are not published. Every content file also has an optional `notes` field for the committee, which is never shown on the site.
 
 | Collection | Location | Key fields |
 |---|---|---|
@@ -313,7 +313,7 @@ Reminder posts, a "last week to respond" message, a link check and content fresh
 | Hosting | Cloudflare Workers static assets, Git-connected builds | Free, no commercial-use restriction, preview links, no adapter for static sites |
 | Analytics | Cloudflare Web Analytics | Cookieless, no personal data, so no cookie banner needed |
 | Forms (Phase 2) | Supabase (new project) + Cloudflare Turnstile | Stephen already knows Supabase. Turnstile is free and privacy-friendly. |
-| Editing UI (later) | GitHub web editor first. Consider Pages CMS or Keystatic if editors struggle. | Decide only if it's needed |
+| Editing UI | Pages CMS (decided 3 November 2026) | Free, edits the same files in the repo through a simple form, and needs no server. Keystatic was ruled out because editing on the live site needs server rendering. |
 | Repo | GitHub organisation owned by the group | Survives any one person stepping away |
 
 Stephen's existing Vercel account and stotte.co.uk stay separate from this site. Sharing working documents through Støtte's Google Workspace is fine.

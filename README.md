@@ -10,7 +10,9 @@ Run by volunteers from the Eaglesham Planning Objections and Info Group. Indepen
 
 ## For committee members: changing the words
 
-All the words on the site live in plain text files. You don't need to know any code.
+Use **Pages CMS** at [app.pagescms.org](https://app.pagescms.org): it shows each page as a simple form. Start with the [editing guide](docs/EDITING-GUIDE.md).
+
+Behind the scenes, all the words live in plain text files:
 
 | To change… | Edit this file |
 |---|---|
@@ -22,9 +24,9 @@ All the words on the site live in plain text files. You don't need to know any c
 | Planning terms in the glossary | `src/data/glossary.yaml` |
 | The site name, deadline, council links, contact email | `src/config/site.ts` (ask Stephen) |
 
-The bit between the `---` lines at the top of each file holds fields such as the number of homes. Keep the field names exactly as they are and change only the values. Anything marked `TODO:` still needs checking or writing.
+The bit between the `---` lines at the top of each file holds fields such as the number of homes. Anything marked `TODO:` still needs checking or writing. You can also edit these files directly on GitHub (open the file and click the pencil icon), but Pages CMS is easier.
 
-Once the site is on GitHub, you can edit any of these files in your browser: open the file, click the pencil icon, make your change and "Commit changes". The site rebuilds itself within a couple of minutes.
+**Setting up Pages CMS (maintainer, once):** sign in at app.pagescms.org with GitHub, choose "Install the GitHub app" and give it access to this repository only. Add each editor as a collaborator on the repository (Settings, Collaborators) with write access. What editors can change is set in [`.pages.yml`](.pages.yml), which must match the rules in `src/content.config.ts`.
 
 Please follow the writing rules in the style guide (§11). Facts need a source, and opinions go in "Our view".
 

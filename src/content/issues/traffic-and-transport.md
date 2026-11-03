@@ -3,7 +3,6 @@ title: Traffic and transport
 order: 1
 summary: "How people from up to 660 new homes would get around, and what that means for the roads through the conservation village."
 policies:
-  # TODO: check exact policy titles and wording against NPF4 and the Proposed LDP3
   - "NPF4 Policy 13: Sustainable transport"
   - "NPF4 Policy 15: Local living and 20 minute neighbourhoods"
   - "NPF4 Policy 7: Historic assets and places"
@@ -12,6 +11,8 @@ sources:
   - title: "TODO"
     url: ""
 updated: 2026-11-02
+notes: |
+  Policies: TODO: check exact policy titles and wording against NPF4 and the Proposed LDP3.
 ---
 
 ## Why it matters

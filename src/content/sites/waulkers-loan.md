@@ -2,9 +2,9 @@
 title: Waulkers Loan
 ldpRef: "Strat 1.8"
 homes: 200
-homesNote: "up to 200 homes"   # From The Eaglesham Echo. TODO: confirm in the Proposed LDP3.
-areaHectares: 9.2   # Measured from the council's map data. TODO: check against the area stated in the plan.
-developer: "Taylor Wimpey"   # As reported by The Eaglesham Echo. TODO: check.
+homesNote: "up to 200 homes"
+areaHectares: 9.2
+developer: "Taylor Wimpey"
 landNow: "Green belt"
 phasing: "TODO: from the Proposed LDP3"
 mapFeatureId: waulkers-loan
@@ -21,6 +21,10 @@ sources:
   - title: "Eaglesham residents urged to have their say over controversial LDP3 development proposals, The Eaglesham Echo, 2 September 2026"
     url: "https://theeagleshamecho.substack.com/p/eaglesham-residents-urged-to-have"
 updated: 2026-11-02
+notes: |
+  Homes: From The Eaglesham Echo. TODO: confirm in the Proposed LDP3.
+  Area: Measured from the council's map data. TODO: check against the area stated in the plan.
+  Developer: As reported by The Eaglesham Echo. TODO: check.
 ---
 
 ## What's proposed

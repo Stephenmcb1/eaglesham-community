@@ -123,27 +123,6 @@ blockquote > :last-child {
 }
 
 /*
-  A highlighted box around a section of a Markdown page, e.g. "Where we are now" on
-  The plan. Same Harl panel as Key facts (style guide §6), with a thin rule to frame it.
-  In Markdown: <div class="panel">, an empty line, the section, an empty line, </div>.
-*/
-.panel {
-  max-width: var(--measure);
-  margin: 0 0 var(--space-6);
-  padding: var(--space-5);
-  border: var(--border-thin) solid var(--colour-rule);
-  background: var(--colour-surface);
-}
-
-.panel > :first-child {
-  margin-top: 0;
-}
-
-.panel > :last-child {
-  margin-bottom: 0;
-}
-
-/*
   Unfinished text: any paragraph or list item containing "TODO" gets this class at
   build time (see markTodos in astro.config.mjs). A dashed outline marks it as a draft
   gap, so it's easy to spot and can't be mistaken for a callout. These should all be

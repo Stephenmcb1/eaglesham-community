@@ -3,9 +3,9 @@ title: "Privacy"
 description: "What information this site collects (very little) and how it's used."
 draft: false
 updated: 2026-11-02
+notes: |
+  TODO: committee to agree who the data controller is (the group or the community council) and fill in the gaps. Update before any form that stores data goes live.
 ---
-
-<!-- TODO: committee to agree who the data controller is (the group or the community council) and fill in the gaps. Update before any form that stores data goes live. -->
 
 ## Who we are
 

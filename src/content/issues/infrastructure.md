@@ -3,7 +3,6 @@ title: Infrastructure
 order: 3
 summary: "School places, health services, water and drainage: what would need to be in place before new homes are built."
 policies:
-  # TODO: check exact policy titles and wording against NPF4 and the Proposed LDP3
   - "NPF4 Policy 18: Infrastructure first"
   - "NPF4 Policy 22: Flood risk and water management"
   - "NPF4 Policy 9: Brownfield, vacant and derelict land and empty buildings"
@@ -12,6 +11,8 @@ sources:
   - title: "TODO"
     url: ""
 updated: 2026-11-02
+notes: |
+  Policies: TODO: check exact policy titles and wording against NPF4 and the Proposed LDP3.
 ---
 
 ## Why it matters

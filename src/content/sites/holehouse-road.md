@@ -2,9 +2,9 @@
 title: Holehouse Road
 ldpRef: "Strat 1.7"
 homes: 100
-homesNote: "up to 100 homes"   # From The Eaglesham Echo. TODO: confirm in the Proposed LDP3.
-areaHectares: 5.07   # Measured from the council's map data. TODO: check against the area stated in the plan.
-developer: "Robertson Homes"   # As reported by The Eaglesham Echo. TODO: check.
+homesNote: "up to 100 homes"
+areaHectares: 5.07
+developer: "Robertson Homes"
 landNow: "Green belt"
 phasing: "TODO: from the Proposed LDP3"
 mapFeatureId: holehouse-road
@@ -21,6 +21,10 @@ sources:
   - title: "Eaglesham residents urged to have their say over controversial LDP3 development proposals, The Eaglesham Echo, 2 September 2026"
     url: "https://theeagleshamecho.substack.com/p/eaglesham-residents-urged-to-have"
 updated: 2026-11-02
+notes: |
+  Homes: From The Eaglesham Echo. TODO: confirm in the Proposed LDP3.
+  Area: Measured from the council's map data. TODO: check against the area stated in the plan.
+  Developer: As reported by The Eaglesham Echo. TODO: check.
 ---
 
 ## What's proposed

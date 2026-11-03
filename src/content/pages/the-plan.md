@@ -12,9 +12,10 @@ sources:
   - title: "East Renfrewshire extends LDP3 consultation period, East Renfrewshire News"
     url: "https://www.eastrennews.co.uk/news/26683690.east-renfrewshire-extends-ldp3-consultation-period/"
 updated: 2026-11-02
+notes: |
+  Draft written from public sources. TODO: committee to check every fact against the council's documents before launch.
+  The "Where we are now" heading and the numbered list straight after it are drawn in a highlighted box. If you rename that heading, the box disappears.
 ---
-
-<!-- Draft written from public sources. TODO: committee to check every fact against the council's documents before launch. -->
 
 ## What is LDP3?
 
@@ -24,9 +25,6 @@ The Scottish Government has set a minimum number of homes East Renfrewshire must
 
 The plan also proposes raising the share of affordable homes required in new housing developments from 25% to 30%.
 
-<!-- The <div> lines draw a highlighted box around this section. Keep the empty lines either side of them, or the Markdown inside stops working. -->
-<div class="panel">
-
 ## Where we are now
 
 1. **Evidence Report.** Approved by the council on 11 September 2024.
@@ -35,8 +33,6 @@ The plan also proposes raising the share of affordable homes required in new hou
 4. **Council considers responses.** Any changes go to councillors for a decision, expected in summer 2027.
 5. **Examination.** A Reporter appointed by Scottish Ministers considers the issues people raised that haven't been resolved. TODO: expected dates.
 6. **Adoption.** The council adopts the final plan. TODO: expected date.
-
-</div>
 
 ## What is a response?
 

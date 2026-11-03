@@ -218,7 +218,7 @@ Apply it with `:focus-visible`. Never remove outlines without replacing them.
 
 **Key facts.** A Harl panel containing a `<dl>`. Terms in Atkinson bold, values in regular weight.
 
-**Highlighted section.** A Harl panel with a 1px Rule border, used to make one section of a Markdown page stand out (for example "Where we are now" on The plan). In Markdown, put `<div class="panel">` and `</div>` around the section, with an empty line on each side. Use it sparingly, and never for opinion (that's the "Our view" callout).
+**Highlighted section.** A Harl panel with a 1px Rule border, used to make one section stand out (for example "Where we are now" on The plan). It is drawn by the page's own styles, targeting the heading and the list after it, so the Markdown stays plain: Pages CMS strips HTML from Markdown when it saves. Use it sparingly, and never for opinion (that's the "Our view" callout).
 
 **Draft gaps (TODO).** Any paragraph or list item in a Markdown page containing "TODO" gets a 2px dashed Stone outline automatically at build time, so unfinished text is easy to spot. This is a working aid, not a design element: every TODO should be gone before launch.
 

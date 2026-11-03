@@ -37,3 +37,33 @@ const issues = (await getCollection("issues")).sort((a, b) => a.data.order - b.d
 
   <SourceList sources={page.data.sources} />
 </ProseLayout>
+
+<style>
+  /*
+    "Where we are now" in a highlighted box (style guide §6, "Highlighted section").
+    The heading and the numbered list straight after it each draw part of one panel,
+    so the Markdown file needs no HTML: Pages CMS would strip it when saving.
+    The heading's id comes from its text, so renaming the heading removes the box.
+  */
+  :global(#where-we-are-now),
+  :global(#where-we-are-now + ol) {
+    max-width: var(--measure);
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-inline: var(--space-5);
+    border: var(--border-thin) solid var(--colour-rule);
+    background: var(--colour-surface);
+  }
+
+  :global(#where-we-are-now) {
+    padding-top: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 0;
+  }
+
+  :global(#where-we-are-now + ol) {
+    padding-bottom: var(--space-1);
+    margin-bottom: var(--space-6);
+    border-top: 0;
+  }
+</style>

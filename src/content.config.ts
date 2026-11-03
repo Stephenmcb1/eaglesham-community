@@ -17,17 +17,25 @@ import sitesGeoJson from "../public/data/eaglesham-sites.geojson?raw";
 const markdownIn = (folder: string) =>
   glob({ base: `./src/content/${folder}`, pattern: ["**/*.md", "!**/_*.md"] });
 
-// A link to where a fact comes from. url may be left "" while it's still a TODO,
+// A link to where a fact comes from. url may be left empty while it's still a TODO,
 // in which case the page shows the title without a link.
+// (Pages CMS can save an empty field as "" or as nothing at all, so both are accepted.)
 const source = z.object({
   title: z.string(),
-  url: z.union([
-    z.url({ error: 'Must be a full web address starting with https://, or "" if not known yet' }),
-    z.literal(""),
-  ]),
+  url: z
+    .union([
+      z.url({ error: "Must be a full web address starting with https://, or left empty if not known yet" }),
+      z.literal(""),
+    ])
+    .nullish()
+    .transform((url) => url ?? ""),
   // Page number in a document, e.g. 47 or "47–49". Optional.
-  page: z.union([z.string(), z.number()]).optional(),
+  page: z.union([z.string(), z.number()]).nullish(),
 });
+
+// Notes for the committee: shown in Pages CMS, never on the site.
+// (Use this instead of # comments, which Pages CMS removes when it saves.)
+const notes = z.string().nullish();
 
 // The site ids used on the map, read from the map data file. mapFeatureId in each
 // site file, and the sites listed in concerns.yaml, must be one of these.
@@ -49,7 +57,12 @@ const sites = defineCollection({
     ldpRef: z.string(),
     homes: z.number().int().nonnegative(),
     homesNote: z.string(),
-    areaHectares: z.number().positive().nullable(),
+    // Empty (null) if not known: the site's page then says "TODO"
+    areaHectares: z
+      .number()
+      .positive()
+      .nullish()
+      .transform((area) => area ?? null),
     developer: z.string(),
     landNow: z.string(),
     phasing: z.string(),
@@ -57,6 +70,7 @@ const sites = defineCollection({
     summary: z.string(),
     sources: z.array(source).min(1, "Every site needs at least one source"),
     updated: z.coerce.date(),
+    notes,
   }),
 });
 
@@ -70,6 +84,7 @@ const issues = defineCollection({
     policies: z.array(z.string()).default([]),
     sources: z.array(source).min(1, "Every issue needs at least one source"),
     updated: z.coerce.date(),
+    notes,
   }),
 });
 
@@ -83,7 +98,10 @@ const pages = defineCollection({
     draft: z.boolean().default(false),
     // Optional: listed under "Sources" at the end of the page
     sources: z.array(source).default([]),
+    // Optional questions and answers, shown as a FAQ (used on How to respond)
+    faq: z.array(z.object({ question: z.string(), answer: z.string() })).default([]),
     updated: z.coerce.date(),
+    notes,
   }),
 });
 
@@ -121,8 +139,9 @@ const concerns = defineCollection({
     issue: z.enum(["traffic-and-transport", "wildlife-and-biodiversity", "infrastructure", "general"]),
     label: z.string(),
     text: z.string(),
-    sites: z.union([z.literal("all"), z.array(siteId).min(1)]),
-    policy: z.string().optional(),
+    // Which sites this point is about (one or more)
+    sites: z.array(siteId).min(1, "Choose at least one site"),
+    policy: z.string().nullish(),
     // true = hidden on the live site until the group approves the wording
     draft: z.boolean().default(false),
   }),

@@ -33,7 +33,7 @@ Stephen maintains the site. He is an experienced project manager who is learning
 - **TypeScript**, strict.
 - **Plain CSS** with custom properties from `tokens.css`, in Astro scoped styles plus one `global.css`. No Tailwind and no CSS-in-JS.
 - **No UI framework** (React, Vue, Svelte). Interactive pieces are small vanilla TypeScript modules in `src/scripts/`, loaded from `<script>` tags in `.astro` components.
-- **Content collections** in Markdown and YAML (model in the brief, §8). Committee members edit these files in GitHub's web editor, so keep frontmatter flat and obvious. Exclude files starting with `_`.
+- **Content collections** in Markdown and YAML (model in the brief, §8). Committee members edit these files in **Pages CMS** (`.pages.yml`, guide in `docs/EDITING-GUIDE.md`), so keep frontmatter flat and obvious, and add any new field to `.pages.yml` too. Pages CMS strips `#` comments and raw HTML when it saves: put editor notes in the `notes` field and never rely on HTML inside Markdown. Exclude files starting with `_`.
 - **Maps:** Leaflet 1.9.x with OpenStreetMap tiles, loaded only on pages with a map.
 - **Fonts:** self-hosted Fontsource packages: `@fontsource/atkinson-hyperlegible-next`, `@fontsource/libre-caslon-text`, `@fontsource/libre-caslon-display`. Never load fonts, scripts or styles from Google or other third-party CDNs.
 - **Hosting:** Cloudflare Workers static assets, Git-connected builds. Static output needs no Cloudflare adapter. Config goes in `wrangler.jsonc` with `assets.directory` set to `./dist`.

@@ -3,8 +3,8 @@ title: Eaglesham North
 ldpRef: "Strat 1.6"
 homes: 360
 homesNote: "about 360 homes in three phases, plus about 34 hectares of enhanced green network (a country park)"
-areaHectares: 59.0   # Measured from the council's map data. About 31.5 ha of this stays green belt in LDP3 (the green network). TODO: check against the area stated in the plan.
-developer: "Mactaggart & Mickel"   # As reported by The Eaglesham Echo. TODO: check whether the plan names a developer.
+areaHectares: 59.0
+developer: "Mactaggart & Mickel"
 landNow: "Green belt"
 phasing: "Phase 1: 2028/29 to 2031/32, about 140 homes. Phase 2: 2032/33 to 2034/35, about 120 homes. Phase 3: 2035/36 to 2037/38, about 100 homes."
 mapFeatureId: eaglesham-north
@@ -23,6 +23,9 @@ sources:
   - title: "'Eaglesham North' proposals central to council's development plans for East Ren, The Eaglesham Echo, 1 September 2026"
     url: "https://theeagleshamecho.substack.com/p/breaking-eaglesham-north-proposals"
 updated: 2026-11-02
+notes: |
+  Area: Measured from the council's map data. About 31.5 ha of this stays green belt in LDP3 (the green network). TODO: check against the area stated in the plan.
+  Developer: As reported by The Eaglesham Echo. TODO: check whether the plan names a developer.
 ---
 
 ## What's proposed

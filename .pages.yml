@@ -1,0 +1,299 @@
+# Pages CMS settings: what committee members can edit at https://app.pagescms.org
+# Docs: https://pagescms.org/docs/configuration/
+#
+# Every field here must match the rules in src/content.config.ts. If you add a field
+# there, add it here too, or Pages CMS won't show it.
+# Editors' guide: docs/EDITING-GUIDE.md
+
+settings:
+  content:
+    # Keep any fields in a file that aren't listed below, instead of deleting them on save
+    merge: true
+  commit:
+    # Show the editor's own name in the GitHub history
+    identity: user
+
+# Reusable fields
+components:
+  sources:
+    label: Sources
+    description: Where each fact on this page comes from. Every fact needs a source.
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: "{title}"
+    fields:
+      - name: title
+        label: Title
+        description: 'Who published it, what it is, and the date. For example: "East Renfrewshire Council, Proposed LDP3: Eaglesham".'
+        type: string
+        required: true
+      - name: url
+        label: Web address
+        description: The full address, starting https://. Leave empty if you don't have it yet.
+        type: string
+      - name: page
+        label: Page number
+        description: Optional. The page in the document, for example 47.
+        type: string
+  updated:
+    label: Last updated
+    description: Change this to today's date when you change the facts on this page.
+    type: date
+    required: true
+    options:
+      format: yyyy-MM-dd
+  notes:
+    label: Notes for the committee
+    description: Reminders and things to check. Only editors see these. They never appear on the site.
+    type: text
+  body:
+    label: Page text
+    description: Use "Heading 2" for section headings. Write TODO in any paragraph that still needs work, and it gets a dashed outline on the site.
+    type: rich-text
+    options:
+      # No picture uploads for now (photos need permission and alt text; ask Stephen)
+      media: false
+
+content:
+  - name: pages
+    label: Pages
+    type: collection
+    path: src/content/pages
+    exclude: [_template.md]
+    view:
+      fields: [title, draft, updated]
+      primary: title
+    # Each page's web address comes from its file name, so don't let editors break links
+    operations:
+      create: false
+      rename: false
+      delete: false
+    fields:
+      - name: title
+        label: Page title
+        type: string
+        required: true
+      - name: description
+        label: Short description
+        description: One sentence. Shown in Google results and when the page is shared on Facebook or WhatsApp.
+        type: text
+        required: true
+      - name: draft
+        label: Hide this page from the live site
+        description: Tick while the page isn't ready.
+        type: boolean
+        default: false
+      - name: updated
+        component: updated
+      - name: body
+        component: body
+      - name: sources
+        component: sources
+      - name: notes
+        component: notes
+
+  - name: sites
+    label: The three sites
+    type: collection
+    path: src/content/sites
+    exclude: [_template.md]
+    view:
+      fields: [title, homes, updated]
+      primary: title
+    operations:
+      create: false
+      rename: false
+      delete: false
+    fields:
+      - name: title
+        label: Site name
+        type: string
+        required: true
+      - name: ldpRef
+        label: LDP3 reference
+        description: For example "Strat 1.8".
+        type: string
+        required: true
+      - name: homes
+        label: Homes (number)
+        description: The most homes proposed. Used in the table and on the maps.
+        type: number
+        required: true
+        options:
+          min: 0
+      - name: homesNote
+        label: Homes (in words)
+        description: 'For example "up to 200 homes". Starts with a small letter.'
+        type: string
+        required: true
+      - name: areaHectares
+        label: Area in hectares
+        description: Leave empty if not known.
+        type: number
+        options:
+          min: 0
+      - name: developer
+        label: Developer
+        type: string
+        required: true
+      - name: landNow
+        label: Land now
+        description: What the land is in the current plan (LDP2), for example "Green belt".
+        type: string
+        required: true
+      - name: phasing
+        label: Phasing
+        description: When the homes would be built.
+        type: text
+        required: true
+      - name: mapFeatureId
+        label: Map shape
+        description: Links this page to its shape on the map. Don't change it.
+        type: string
+        readonly: true
+      - name: summary
+        label: Summary
+        description: One or two sentences, shown at the top of the site's page and on the sites list.
+        type: text
+        required: true
+      - name: updated
+        component: updated
+      - name: body
+        component: body
+      - name: sources
+        component: sources
+      - name: notes
+        component: notes
+
+  - name: issues
+    label: The big issues
+    type: collection
+    path: src/content/issues
+    exclude: [_template.md]
+    view:
+      fields: [title, order, updated]
+      primary: title
+    operations:
+      create: false
+      rename: false
+      delete: false
+    fields:
+      - name: title
+        label: Issue name
+        type: string
+        required: true
+      - name: order
+        label: Position in lists
+        description: 1 comes first.
+        type: number
+        required: true
+      - name: summary
+        label: Summary
+        description: One or two plain sentences.
+        type: text
+        required: true
+      - name: policies
+        label: Relevant policies
+        description: 'For example "NPF4 Policy 13: Sustainable transport".'
+        type: string
+        list: true
+      - name: updated
+        component: updated
+      - name: body
+        component: body
+      - name: sources
+        component: sources
+      - name: notes
+        component: notes
+
+  # The points residents can tick on How to respond. Each one adds a sentence to their draft.
+  - name: concerns
+    label: Response helper points
+    type: file
+    path: src/data/concerns.yaml
+    format: yaml
+    list: true
+    fields:
+      - name: id
+        label: ID
+        description: A short name in lower case with hyphens, for example "school-places". Never change it once the site is live.
+        type: string
+        required: true
+        pattern:
+          regex: "^[a-z0-9-]+$"
+          message: Use lower-case letters, numbers and hyphens only.
+      - name: issue
+        label: Issue
+        type: select
+        required: true
+        options:
+          values:
+            - name: traffic-and-transport
+              label: Traffic and transport
+            - name: wildlife-and-biodiversity
+              label: Wildlife and biodiversity
+            - name: infrastructure
+              label: Infrastructure
+            - name: general
+              label: General
+      - name: label
+        label: What residents tick
+        description: Short and plain, for example "School places".
+        type: string
+        required: true
+      - name: text
+        label: Sentence added to their response
+        description: In the resident's own voice ("I am concerned..."). Calm, specific, and only claims we can support.
+        type: text
+        required: true
+      - name: sites
+        label: Which sites
+        description: Show this point when the resident chooses any of these sites.
+        type: select
+        required: true
+        options:
+          multiple: true
+          min: 1
+          values:
+            - name: eaglesham-north
+              label: Eaglesham North
+            - name: holehouse-road
+              label: Holehouse Road
+            - name: waulkers-loan
+              label: Waulkers Loan
+      - name: policy
+        label: Policy reference
+        description: For the committee's checking. Not shown to residents.
+        type: string
+      - name: draft
+        label: Hide from the live site
+        description: Tick until the group has agreed the wording.
+        type: boolean
+        default: true
+
+  - name: glossary
+    label: Glossary
+    type: file
+    path: src/data/glossary.yaml
+    format: yaml
+    list: true
+    fields:
+      - name: id
+        label: ID
+        description: A short name in lower case with hyphens, used in links. Never change it once the site is live.
+        type: string
+        required: true
+        pattern:
+          regex: "^[a-z0-9-]+$"
+          message: Use lower-case letters, numbers and hyphens only.
+      - name: term
+        label: Term
+        type: string
+        required: true
+      - name: definition
+        label: Definition
+        description: One or two sentences.
+        type: text
+        required: true

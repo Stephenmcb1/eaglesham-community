@@ -1,15 +1,13 @@
 ---
 title: "Our view"
 description: "What the group thinks about LDP3's proposals for Eaglesham, and why."
-draft: true   # Hidden until the group agrees the wording
+draft: true
 updated: 2026-11-02
+notes: |
+  This page is the group's opinion. Everything else on the site is factual.
+  Keep it hidden (draft) until the group agrees the wording at a meeting.
+  Be fair, be specific, and no comments on anyone's motives.
 ---
-
-<!--
-This page is the group's opinion. Everything else on the site is factual.
-Agree the wording at a meeting before setting draft: false.
-Be fair, be specific, and no comments on anyone's motives.
--->
 
 ## What we support
 
