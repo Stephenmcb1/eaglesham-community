@@ -306,6 +306,44 @@ main:focus {
   color: var(--colour-action-hover);
 }
 
+/*
+  Steps: numbered lists that are real sequences (style guide §6), with large Caslon
+  numbers beside the text. Applies to every numbered list in a Markdown page (.prose),
+  and to any <ol class="steps"> elsewhere, such as on the home page.
+*/
+.prose ol:not(.source-list),
+ol.steps {
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.prose ol:not(.source-list) > li,
+ol.steps > li {
+  position: relative;
+  min-height: var(--text-step-number);
+  margin-bottom: var(--space-5);
+  padding-left: var(--space-8);
+  counter-increment: step;
+}
+
+.prose ol:not(.source-list) > li::before,
+ol.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-step-number);
+  line-height: 1;
+}
+
+/* A step with a TODO outline: move the number inside the dashed line */
+.prose ol:not(.source-list) > li.todo::before {
+  top: var(--space-2);
+  left: var(--space-3);
+}
+
 /* ---------- Forms (style guide §6) ---------- */
 
 fieldset {

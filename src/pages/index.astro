@@ -1,19 +1,114 @@
 ---
-// Temporary holding page. Replaced by the real home page in Phase 1, step 8.
+/*
+  The home page (brief §6, style guide §5 "Home page"). The headline and the intro
+  paragraph come from src/content/pages/home.md, so the committee can edit them.
+*/
+import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import VillagePlan from "../components/VillagePlan.astro";
+import SiteSchedule from "../components/SiteSchedule.astro";
 import { site } from "../config/site";
+import { formatDate } from "../utils/dates";
+
+const home = await getEntry("pages", "home");
+if (!home) throw new Error("src/content/pages/home.md is missing");
+const { Content: Intro } = await render(home);
+
+const sites = await getCollection("sites");
+const issues = (await getCollection("issues")).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout showCountdown>
-  <h1>{site.name}</h1>
-  <p class="lead">
-    This site is being built. It will explain what Local Development Plan 3 (LDP3) proposes for
-    Eaglesham and Waterfoot, and how to respond.
-  </p>
-  <p>
-    In the meantime, read about LDP3 on <a href={site.council.ldp3Page}
-      >East Renfrewshire Council's website</a
-    >.
-  </p>
+<BaseLayout description={home.data.description} showCountdown>
+  <section class="hero" aria-labelledby="home-heading">
+    <h1 id="home-heading">{home.data.title}</h1>
+    <div class="lead">
+      <Intro />
+    </div>
+    <p class="buttons">
+      <a class="button" href="/respond/">How to respond</a>
+      <a class="button button-secondary" href="/sites/">See the sites</a>
+    </p>
+  </section>
+
+  <VillagePlan sites={sites} />
+
+  <section aria-labelledby="proposed-heading">
+    <h2 id="proposed-heading">What's proposed</h2>
+    <SiteSchedule sites={sites} />
+    <p><a href="/sites/">More about the three sites, with a map</a></p>
+  </section>
+
+  <section aria-labelledby="issues-heading">
+    <h2 id="issues-heading">The big issues</h2>
+    {/* Side by side on wide screens, one under another on phones. No boxes (style guide §5). */}
+    <div class="issues">
+      {
+        issues.map((issue) => (
+          <div>
+            <h3>{issue.data.title}</h3>
+            <p>{issue.data.summary}</p>
+          </div>
+        ))
+      }
+    </div>
+    <p><a href="/the-plan/#the-issues">Read about the issues</a></p>
+  </section>
+
+  <section aria-labelledby="steps-heading">
+    <h2 id="steps-heading">How to respond in three steps</h2>
+    <ol class="steps">
+      <li>
+        <strong>Choose what to respond about.</strong> One or more of the sites, or the plan as a whole.
+      </li>
+      <li><strong>Write it in your own words.</strong> Our response helper can get you started.</li>
+      <li><strong>Send it to the council</strong> by {formatDate(site.deadline)}.</li>
+    </ol>
+    <p><a class="button" href="/respond/">Start your response</a></p>
+  </section>
 </BaseLayout>
 
+<style>
+  /* The one display-size headline on the site (style guide §4) */
+  h1 {
+    max-width: 16ch;
+    margin-top: var(--space-6);
+    font-family: var(--font-display);
+    font-size: var(--text-display);
+  }
+
+  /* The intro comes from Markdown, so it arrives as its own <p> */
+  .lead :global(p) {
+    max-width: var(--measure);
+    font-size: var(--text-lead);
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  section + section {
+    margin-top: var(--space-7);
+  }
+
+  .issues {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 900px) {
+    .issues {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+
+    section + section {
+      margin-top: var(--space-8);
+    }
+  }
+
+  .issues h3 {
+    margin-top: 0;
+  }
+</style>

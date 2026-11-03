@@ -30,6 +30,10 @@ Last fetched: 2 November 2026.
 | `core-paths.geojson` | Core paths (SP8.1), clipped | Optional |
 | `cycle-corridors.geojson` | Strategic cycle corridors (SP8.3), clipped | Optional |
 
+### Street data for the home page drawing
+
+`src/data/village-streets.geojson` holds Eaglesham's streets and burns from OpenStreetMap, used only to draw the village plan on the home page (`src/components/VillagePlan.astro`). It isn't published as a file. Fetched on 3 November 2026 by `python scripts/fetch_village_streets.py` (standard library only). Each line has a `kind`: `main` (bigger roads, Montgomery Street and Polnoon Street), `street` or `water`. Licence: © OpenStreetMap contributors, ODbL, credited in the drawing's caption.
+
 ## Properties
 
 `eaglesham-sites.geojson`:

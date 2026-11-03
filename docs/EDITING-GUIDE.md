@@ -13,6 +13,7 @@ This guide is for committee members. You don't need to know anything about code 
 1. Go to [app.pagescms.org](https://app.pagescms.org) and press **Sign in with GitHub**.
 2. Choose **eaglesham-community**.
 3. On the left you'll see:
+   - **Home page**: the headline and the paragraph under it
    - **Pages**: The plan, About, Our view, Privacy, Accessibility
    - **How to respond page**: the steps, and the questions and answers at the bottom
    - **The three sites**: one entry for each site

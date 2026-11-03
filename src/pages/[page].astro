@@ -10,7 +10,7 @@ import SourceList from "../components/SourceList.astro";
 export async function getStaticPaths() {
   // Pages that have their own file in src/pages/ because they show extra things.
   // (This has to be inside getStaticPaths: Astro runs it separately from the rest of the file.)
-  const pagesWithOwnRoute = ["the-plan", "respond"];
+  const pagesWithOwnRoute = ["the-plan", "respond", "home"];
   const pages = await getCollection(
     "pages",
     ({ id, data }) => !pagesWithOwnRoute.includes(id) && (import.meta.env.DEV || !data.draft),

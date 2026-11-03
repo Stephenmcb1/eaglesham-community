@@ -1,0 +1,263 @@
+---
+/*
+  The village plan on the home page (style guide §7): Eaglesham's streets in fine
+  lines, the Orry in green, and the three proposed sites in red line, like a
+  planning drawing. Drawn here when the site is built, so it's plain SVG with no
+  map tiles and no JavaScript.
+
+  Streets come from src/data/village-streets.geojson (OpenStreetMap), made by
+  scripts/fetch_village_streets.py. The sites and the Orry come from the council's
+  map data in public/data/.
+
+  The one animation on the site: the red lines draw themselves in once, on load.
+  With reduced motion turned on, they simply appear (tokens.css sets the time to 0).
+*/
+import type { CollectionEntry } from "astro:content";
+import { site } from "../config/site";
+import sitesRaw from "../../public/data/eaglesham-sites.geojson?raw";
+import openSpaceRaw from "../../public/data/open-space.geojson?raw";
+import conservationRaw from "../../public/data/conservation-area.geojson?raw";
+import streetsRaw from "../data/village-streets.geojson?raw";
+import {
+  boundsOf,
+  labelPointOf,
+  makeProjection,
+  pathOf,
+  scaleBarLength,
+  type FeatureCollection,
+} from "../utils/geo";
+
+interface Props {
+  sites: CollectionEntry<"sites">[];
+}
+
+const { sites } = Astro.props;
+
+const siteShapes = JSON.parse(sitesRaw) as FeatureCollection;
+const streets = JSON.parse(streetsRaw) as FeatureCollection;
+// The Orry is one of the council's open spaces
+const orry = (JSON.parse(openSpaceRaw) as FeatureCollection).features.filter((f) =>
+  String(f.properties.name).startsWith("The Orry"),
+);
+
+// Frame the drawing on the three sites and the old village (the conservation area).
+// 3:2 suits both phones and desktops.
+const conservation = JSON.parse(conservationRaw) as FeatureCollection;
+const view = makeProjection(boundsOf([...siteShapes.features, ...conservation.features]), 1000, 3 / 2, 0.06);
+
+const streetPaths = (kind: string) =>
+  streets.features.filter((f) => f.properties.kind === kind).map((f) => pathOf(f, view.project));
+
+// Labels in HTML over the drawing (as percentages), so the text stays readable at any size
+const labels = siteShapes.features.map((feature) => {
+  const entry = sites.find((s) => s.data.mapFeatureId === feature.properties.id);
+  const [x, y] = view.project(labelPointOf(feature));
+  return {
+    name: entry?.data.title ?? String(feature.properties.name),
+    homes: entry ? `, up to ${entry.data.homes} homes` : "",
+    left: (x / view.width) * 100,
+    top: (y / view.height) * 100,
+  };
+});
+
+const scaleMetres = scaleBarLength(view.metresPerUnit, view.width);
+const scaleWidth = (scaleMetres / view.metresPerUnit / view.width) * 100;
+const scaleText = scaleMetres >= 1000 ? `${scaleMetres / 1000} km` : `${scaleMetres} m`;
+
+// What a screen reader hears instead of the drawing
+const description = `A plan of Eaglesham showing the ${labels.length} proposed housing sites drawn in red: ${labels
+  .map((l) => l.name + l.homes)
+  .join("; ")}.`;
+---
+
+<figure class="village-plan">
+  <div class="drawing" role="img" aria-label={description}>
+    <svg viewBox={`0 0 ${view.width} ${view.height}`} aria-hidden="true" focusable="false">
+      {orry.map((f) => <path class="orry" d={pathOf(f, view.project)} />)}
+      {streetPaths("water").map((d) => <path class="water" d={d} />)}
+      {streetPaths("street").map((d) => <path class="street" d={d} />)}
+      {streetPaths("main").map((d) => <path class="main-street" d={d} />)}
+      {/* pathLength="1" lets the CSS draw each line in, whatever its real length */}
+      {siteShapes.features.map((f) => <path class="site" d={pathOf(f, view.project)} pathLength="1" />)}
+    </svg>
+
+    {
+      labels.map((label) => (
+        <span class="label" style={`left: ${label.left}%; top: ${label.top}%`} aria-hidden="true">
+          <span>
+            {label.name}
+            <span class="label-homes">{label.homes}</span>
+          </span>
+        </span>
+      ))
+    }
+
+    <span class="north-arrow" aria-hidden="true">
+      N <svg viewBox="0 0 10 14" width="10" height="14"><path d="M5 0 10 14 5 10 0 14Z" fill="currentColor"></path></svg>
+    </span>
+    <span class="scale-bar" aria-hidden="true">
+      <span class="scale-bar-line" style={`width: ${scaleWidth}%`}></span>
+      <span class="scale-bar-text">{scaleText}</span>
+    </span>
+  </div>
+
+  <figcaption>
+    Indicative only. See <a href={site.council.ldp3Page}>the council's LDP3 maps</a> for exact boundaries.
+    Streets © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
+  </figcaption>
+</figure>
+
+<style>
+  .village-plan {
+    margin: var(--space-6) 0 var(--space-7);
+  }
+
+  .drawing {
+    position: relative;
+    overflow: hidden;
+    border: var(--border-thin) solid var(--colour-rule);
+    background: var(--colour-background);
+  }
+
+  .drawing > svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .drawing > svg path:not(.orry) {
+    fill: none;
+  }
+
+  /* Street line widths stay the same at any screen size */
+  .orry,
+  .water,
+  .street,
+  .main-street {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .orry {
+    fill: var(--colour-moss);
+  }
+
+  .water {
+    stroke: var(--colour-stone);
+    stroke-width: 1.5px;
+  }
+
+  .street {
+    stroke: var(--colour-whinstone);
+    stroke-width: 1px;
+  }
+
+  .main-street {
+    stroke: var(--colour-whinstone);
+    stroke-width: 2px;
+  }
+
+  /*
+    The red lines can't use non-scaling-stroke like the streets: it breaks the
+    draw-in effect in some browsers. So their width is in drawing units (the drawing
+    is 1000 units wide) and set per screen size to come out at about 3px.
+  */
+  .site {
+    stroke: var(--colour-site-boundary);
+    stroke-width: 9;
+    stroke-linejoin: round;
+    /* One dash as long as the whole line, slid along so the line appears to draw itself */
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    animation: draw-in var(--duration-draw) var(--ease-out) both;
+  }
+
+  @media (min-width: 600px) {
+    .site {
+      stroke-width: 5;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .site {
+      stroke-width: 3;
+    }
+  }
+
+  @keyframes draw-in {
+    from {
+      stroke-dashoffset: 1;
+    }
+  }
+
+  /* Site labels: white with a thin border, as on the sites map */
+  .label {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  .label > span {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    padding: 0 var(--space-2);
+    border: var(--border-thin) solid var(--colour-rule);
+    background: var(--colour-background);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  /* Phones: just the site names, so the labels don't crowd each other. The homes are in the table below. */
+  @media (max-width: 599.98px) {
+    .label-homes {
+      display: none;
+    }
+  }
+
+  .north-arrow,
+  .scale-bar {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 0 var(--space-1);
+    background: var(--colour-background);
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+  }
+
+  .north-arrow {
+    top: var(--space-3);
+    right: var(--space-3);
+  }
+
+  /* As wide as the drawing, so the line's percentage width matches the drawing's scale */
+  .scale-bar {
+    bottom: var(--space-3);
+    left: var(--space-3);
+    width: 100%;
+    padding: 0;
+    background: none;
+    font-weight: var(--weight-regular);
+  }
+
+  .scale-bar-text {
+    padding: 0 var(--space-1);
+    background: var(--colour-background);
+  }
+
+  .scale-bar-line {
+    flex: none;
+    height: var(--space-2);
+    border: 2px solid currentColor;
+    border-top: 0;
+  }
+
+  figcaption {
+    margin-top: var(--space-2);
+    color: var(--colour-text-muted);
+    font-size: var(--text-sm);
+  }
+</style>

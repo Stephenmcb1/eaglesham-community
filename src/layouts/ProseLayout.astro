@@ -35,41 +35,6 @@ const { title, description, lead, updated, showCountdown } = Astro.props;
     max-width: var(--measure);
   }
 
-  /*
-    Numbered lists are real sequences (style guide §6, "Steps"): large Caslon numbers
-    with the step text beside them. :global() is needed because the list comes from
-    a Markdown file, which this component's scoped styles don't reach otherwise.
-  */
-  .prose :global(ol:not(.source-list)) {
-    padding: 0;
-    list-style: none;
-    counter-reset: step;
-  }
-
-  .prose :global(ol:not(.source-list) > li) {
-    position: relative;
-    min-height: var(--text-step-number);
-    margin-bottom: var(--space-5);
-    padding-left: var(--space-8);
-    counter-increment: step;
-  }
-
-  .prose :global(ol:not(.source-list) > li::before) {
-    content: counter(step);
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-family: var(--font-heading);
-    font-size: var(--text-step-number);
-    line-height: 1;
-  }
-
-  /* A step with a TODO outline (global.css): move the number inside the dashed line */
-  .prose :global(ol:not(.source-list) > li.todo::before) {
-    top: var(--space-2);
-    left: var(--space-3);
-  }
-
   .updated {
     margin-top: var(--space-7);
     color: var(--colour-text-muted);

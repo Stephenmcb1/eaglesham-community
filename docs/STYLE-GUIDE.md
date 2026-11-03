@@ -248,7 +248,7 @@ Apply it with `:focus-visible`. Never remove outlines without replacing them.
 ### The village plan (home page hero)
 
 The memorable piece, and the only bold element.
-- A static inline SVG, generated once from OpenStreetMap data by a script in `/scripts`, then tidied by hand and committed. It is not fetched live.
+- A static inline SVG, drawn when the site is built (`src/components/VillagePlan.astro`) from street data fetched once from OpenStreetMap by `scripts/fetch_village_streets.py` and committed in `src/data/village-streets.geojson`. Nothing is fetched live.
 - **Streets:** Whinstone, 1–1.5px. Main streets (Montgomery Street, Polnoon Street) are a little heavier.
 - **The Orry:** Moss fill. **The burn:** a Stone line.
 - **Proposed sites:** a 3px Red line boundary, no fill, labelled in Atkinson bold with the site name and home count ("Waulkers Loan, up to 200 homes").

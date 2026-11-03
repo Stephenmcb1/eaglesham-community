@@ -61,8 +61,8 @@ content:
     label: Pages
     type: collection
     path: src/content/pages
-    # The How to respond page has its own entry below, with its questions and answers
-    exclude: [_template.md, respond.md]
+    # The home page and How to respond have their own entries below
+    exclude: [_template.md, respond.md, home.md]
     view:
       fields: [title, draft, updated]
       primary: title
@@ -92,6 +92,40 @@ content:
         component: body
       - name: sources
         component: sources
+      - name: notes
+        component: notes
+
+  - name: home
+    label: Home page
+    type: file
+    path: src/content/pages/home.md
+    operations:
+      delete: false
+    fields:
+      - name: title
+        label: Headline
+        description: The big headline at the top of the home page. Two short lines at most.
+        type: string
+        required: true
+      - name: description
+        label: Short description
+        description: One sentence. Shown in Google results and when the site is shared on Facebook or WhatsApp.
+        type: text
+        required: true
+      - name: draft
+        label: Hide this page from the live site
+        description: Leave unticked. The home page always shows.
+        type: boolean
+        hidden: true
+        default: false
+      - name: updated
+        component: updated
+      - name: body
+        label: Intro paragraph
+        description: The paragraph under the headline. Keep it to two or three sentences.
+        type: rich-text
+        options:
+          media: false
       - name: notes
         component: notes
 
