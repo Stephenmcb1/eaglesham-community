@@ -14,12 +14,14 @@ interface Props {
   lead?: string;
   // From the page file's "updated" field
   updated?: Date;
+  // Show "That's N days away." in the deadline strip (How to respond)
+  showCountdown?: boolean;
 }
 
-const { title, description, lead, updated } = Astro.props;
+const { title, description, lead, updated, showCountdown } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} showCountdown={showCountdown}>
   <article class="prose">
     <h1>{title}</h1>
     {lead && <p class="lead">{lead}</p>}

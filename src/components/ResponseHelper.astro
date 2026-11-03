@@ -1,0 +1,286 @@
+---
+/*
+  The response helper on /respond/ (brief §7.2). It helps someone draft their own
+  response from a few choices and their own words.
+
+  Nothing is sent anywhere: src/scripts/helper.ts builds the draft in the browser and
+  may keep it in this browser's storage so it survives a reload.
+
+  Without JavaScript, people see the suggested points as a plain list instead,
+  to use in their own words.
+*/
+import { getCollection } from "astro:content";
+import { site } from "../config/site";
+
+// The three sites, in the same order as the schedule table
+const sites = (await getCollection("sites")).sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+// Points marked draft: true only show with npm run dev, until the group approves them
+const concerns = await getCollection("concerns", ({ data }) => import.meta.env.DEV || !data.draft);
+
+// Group the points under each issue's title, in the issues' own order, with "General" last
+const issues = (await getCollection("issues")).sort((a, b) => a.data.order - b.data.order);
+const groups = [
+  ...issues.map((issue) => ({ id: issue.id, title: issue.data.title })),
+  { id: "general", title: "General" },
+]
+  .map((group) => ({ ...group, concerns: concerns.filter((c) => c.data.issue === group.id) }))
+  .filter((group) => group.concerns.length > 0);
+
+// What can be chosen in "Which parts of the plan?": each site, then the plan as a whole.
+// data-ref is the LDP3 reference, added to the draft so the council knows which part is meant.
+const parts = [
+  ...sites.map((s) => ({ id: s.id, name: s.data.title, ref: s.data.ldpRef })),
+  { id: "general", name: "The plan in general", ref: "" },
+];
+
+const positions = [
+  { value: "support", label: "I support it" },
+  { value: "object", label: "I object to it" },
+  { value: "comment", label: "I want to comment on it" },
+];
+---
+
+<section class="helper-section" aria-labelledby="helper-heading">
+  <h2 id="helper-heading">Write your response</h2>
+
+  {/* ---------- Without JavaScript: the points as text ---------- */}
+  <div class="helper-fallback">
+    {
+      groups.length > 0 ? (
+        <>
+          <p>Here are some points you could make. Use your own words, and add how each one would affect you.</p>
+          {groups.map((group) => (
+            <>
+              <h3>{group.title}</h3>
+              <ul>
+                {group.concerns.map((concern) => (
+                  <li>
+                    <strong>{concern.data.label}.</strong> {concern.data.text}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ))}
+        </>
+      ) : (
+        <p>Write your response in your own words, following the steps above.</p>
+      )
+    }
+  </div>
+
+  {/* ---------- With JavaScript: the helper. Hidden until helper.ts runs. ---------- */}
+  <form class="helper" hidden novalidate>
+    <p>
+      Answer the questions and your response builds up in the box at the end. You can change any of
+      it before you send it. Nothing you type here leaves this device.
+    </p>
+
+    <div class="error-summary" role="alert" tabindex="-1" hidden>
+      <h2>There is a problem</h2>
+      <p data-error-summary-text></p>
+    </div>
+
+    <fieldset>
+      <legend>Which parts of the plan is your response about?</legend>
+      <p class="hint">Choose as many as you like.</p>
+      {
+        parts.map((part) => (
+          <label class="choice">
+            <input type="checkbox" name="part" value={part.id} data-name={part.name} data-ref={part.ref} />
+            <span>{part.name}</span>
+          </label>
+        ))
+      }
+    </fieldset>
+
+    {/* One "what's your view?" question per part. Each shows once its part is ticked. */}
+    {
+      parts.map((part) => (
+        <fieldset data-position-for={part.id} hidden>
+          <legend>{part.name}: what's your view?</legend>
+          {positions.map((position) => (
+            <label class="choice">
+              <input type="radio" name={`position-${part.id}`} value={position.value} />
+              <span>{position.label}</span>
+            </label>
+          ))}
+        </fieldset>
+      ))
+    }
+
+    {
+      groups.length > 0 && (
+        <fieldset class="concerns">
+          <legend>What matters to you?</legend>
+          <p class="hint">
+            Each point you tick adds a sentence to your response. Only points about the parts you chose are
+            shown.
+          </p>
+          {groups.map((group) => (
+            <fieldset class="concern-group" data-concern-group>
+              <legend>{group.title}</legend>
+              {group.concerns.map((concern) => (
+                <label class="choice" data-concern>
+                  <input
+                    type="checkbox"
+                    name="concern"
+                    value={concern.data.id}
+                    data-text={concern.data.text}
+                    data-sites={concern.data.sites.join(" ")}
+                  />
+                  <span>{concern.data.label}</span>
+                </label>
+              ))}
+            </fieldset>
+          ))}
+        </fieldset>
+      )
+    }
+
+    <div class="field">
+      <label class="label" for="own-words">In your own words</label>
+      <p class="hint" id="own-words-hint">
+        How would this affect you? What have you seen yourself? Personal detail makes a response
+        stronger.
+      </p>
+      <textarea id="own-words" rows="6" aria-describedby="own-words-hint"></textarea>
+    </div>
+
+    <div class="field" data-draft-field>
+      <h3>Your response</h3>
+      <p class="error-message" id="draft-error" hidden></p>
+      <label class="label" for="draft">Your response, ready to copy</label>
+      <p class="hint" id="draft-hint">You can edit this before you copy it.</p>
+      <textarea id="draft" rows="16" aria-describedby="draft-hint"></textarea>
+
+      <div class="rebuild" hidden>
+        <p>
+          You've changed the response yourself, so it no longer updates when you change your answers
+          above.
+        </p>
+        <button type="button" class="button button-secondary" data-rebuild>Start again from my answers</button>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="button" data-copy>Copy your response</button>
+        <a class="button button-secondary" href={site.council.responseForm}>Open the council's form</a>
+        <button type="button" class="button button-secondary" data-print>Print your response</button>
+      </div>
+
+      {/* Screen readers announce whatever is put in here, e.g. "Copied" */}
+      <p class="status" aria-live="polite" data-status></p>
+
+      <h4>Before you send it, check it includes</h4>
+      <ul>
+        <li>your name and address</li>
+        <li>which site or part of the plan you mean (the helper adds the LDP3 reference)</li>
+        <li>whether you support it, object to it or want to comment</li>
+        <li>your reasons</li>
+      </ul>
+      <p class="todo">TODO: check this list against what the council's form actually asks for.</p>
+
+      <p>
+        <button type="button" class="link-button" data-clear>Clear my draft</button>
+      </p>
+    </div>
+  </form>
+
+  {/* A copy of the draft as plain text, shown only when printing with "Print your response" */}
+  <div class="print-response" aria-hidden="true"></div>
+</section>
+
+<script src="../scripts/helper.ts"></script>
+
+<style>
+  .helper-section {
+    margin-top: var(--space-7);
+  }
+
+  .concern-group {
+    margin-bottom: var(--space-4);
+  }
+
+  /* The issue names inside "What matters to you?" are smaller than the question itself */
+  .concern-group legend {
+    margin-top: var(--space-2);
+    color: var(--colour-text-muted);
+  }
+
+  .field {
+    margin-bottom: var(--space-6);
+  }
+
+  #draft {
+    font-size: var(--text-base);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+
+  .rebuild {
+    margin-top: var(--space-3);
+    padding: var(--space-4);
+    background: var(--colour-surface);
+  }
+
+  .rebuild p {
+    margin-bottom: var(--space-3);
+  }
+
+  .status {
+    min-height: 1.6em;
+    margin-top: var(--space-3);
+    font-weight: var(--weight-bold);
+  }
+
+  h4 {
+    margin-top: var(--space-5);
+  }
+
+  /* "Clear my draft" is a button (it does something) but looks like a link (it's a minor action) */
+  .link-button {
+    min-height: var(--tap-target);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--colour-link);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+    cursor: pointer;
+  }
+
+  .link-button:hover {
+    color: var(--colour-link-hover);
+    text-decoration-thickness: 2px;
+  }
+
+  .print-response {
+    display: none;
+  }
+
+  /*
+    "Print your response" adds .printing-response to <html> just while printing.
+    Then only the response is printed, as plain text. Printing from the browser's own
+    menu prints the whole page as usual.
+  */
+  @media print {
+    :global(html.printing-response body *) {
+      visibility: hidden;
+    }
+
+    :global(html.printing-response) .print-response {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      visibility: visible;
+      white-space: pre-wrap;
+    }
+  }
+</style>

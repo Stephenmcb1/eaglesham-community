@@ -1,0 +1,44 @@
+---
+/*
+  How to respond: the steps from src/content/pages/respond.md, then the response
+  helper, then the questions and answers (the "faq" list in the same file).
+*/
+import { getEntry, render } from "astro:content";
+import ProseLayout from "../layouts/ProseLayout.astro";
+import ResponseHelper from "../components/ResponseHelper.astro";
+import SourceList from "../components/SourceList.astro";
+
+const page = await getEntry("pages", "respond");
+if (!page) throw new Error("src/content/pages/respond.md is missing");
+const { Content } = await render(page);
+const { faq } = page.data;
+---
+
+<ProseLayout title={page.data.title} description={page.data.description} updated={page.data.updated} showCountdown>
+  <Content />
+
+  <ResponseHelper />
+
+  {
+    faq.length > 0 && (
+      <section class="faq" aria-labelledby="faq-heading">
+        <h2 id="faq-heading">Questions and answers</h2>
+        {faq.map((item) => (
+          <details>
+            <summary>{item.question}</summary>
+            {/* Answers still to be confirmed get the dashed TODO outline, like Markdown pages */}
+            <p class:list={{ todo: item.answer.includes("TODO") }}>{item.answer}</p>
+          </details>
+        ))}
+      </section>
+    )
+  }
+
+  <SourceList sources={page.data.sources} />
+</ProseLayout>
+
+<style>
+  .faq {
+    margin-top: var(--space-7);
+  }
+</style>

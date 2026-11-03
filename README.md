@@ -18,7 +18,7 @@ Behind the scenes, all the words live in plain text files:
 |---|---|
 | A site's details (homes, developer, description) | `src/content/sites/<site-name>.md` |
 | An issue page (traffic, wildlife, infrastructure) | `src/content/issues/<issue-name>.md` |
-| The plan explained, About, Our view, Privacy, Accessibility | `src/content/pages/<page>.md` |
+| The plan explained, How to respond, About, Our view, Privacy, Accessibility | `src/content/pages/<page>.md` |
 | Add a news update | Copy `src/content/news/_template.md`, rename it `YYYY-MM-DD-short-title.md` |
 | The points offered in the response helper | `src/data/concerns.yaml` |
 | Planning terms in the glossary | `src/data/glossary.yaml` |

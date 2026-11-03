@@ -306,6 +306,139 @@ main:focus {
   color: var(--colour-action-hover);
 }
 
+/* ---------- Forms (style guide §6) ---------- */
+
+fieldset {
+  min-width: 0;
+  margin: 0 0 var(--space-6);
+  padding: 0;
+  border: 0;
+}
+
+legend,
+.label {
+  display: block;
+  margin-bottom: var(--space-2);
+  padding: 0;
+  font-weight: var(--weight-bold);
+}
+
+/* Help text under a label or legend */
+.hint {
+  margin: calc(-1 * var(--space-1)) 0 var(--space-3);
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+}
+
+textarea,
+input[type="text"],
+input[type="email"] {
+  display: block;
+  width: 100%;
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-input) solid var(--colour-input-border);
+  border-radius: var(--radius-control);
+  background: var(--colour-background);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+}
+
+/* A checkbox or radio with its label beside it. The whole row can be clicked. */
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-height: var(--tap-target);
+  padding-block: var(--space-2);
+  cursor: pointer;
+}
+
+.choice input {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0.1rem 0 0;
+  accent-color: var(--colour-orry);
+  cursor: pointer;
+}
+
+/* A field with a problem: Red line on the left and the message above it */
+.has-error {
+  padding-left: var(--space-4);
+  border-left: var(--border-callout) solid var(--colour-error);
+}
+
+.error-message {
+  margin: 0 0 var(--space-2);
+  color: var(--colour-error);
+  font-weight: var(--weight-bold);
+}
+
+/* The list of problems at the top of a form */
+.error-summary {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border: var(--border-input) solid var(--colour-error);
+}
+
+.error-summary h2 {
+  margin-top: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+}
+
+/* ---------- Questions and answers (style guide §6, "Details/FAQ") ---------- */
+
+details {
+  max-width: var(--measure);
+  border-bottom: var(--border-thin) solid var(--colour-rule);
+}
+
+details:first-of-type {
+  border-top: var(--border-thin) solid var(--colour-rule);
+}
+
+summary {
+  position: relative;
+  display: block;
+  min-height: var(--tap-target);
+  padding: var(--space-3) var(--space-7) var(--space-3) 0;
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+}
+
+/* Hide the browser's own triangle (Safari needs the second rule) */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A plus sign drawn with two lines; the upright one disappears when open, leaving a minus */
+summary::before,
+summary::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: var(--space-2);
+  width: 1rem;
+  height: 2px;
+  background: currentColor;
+  transition: transform var(--duration-quick) var(--ease-out);
+}
+
+summary::after {
+  transform: rotate(90deg);
+}
+
+details[open] summary::after {
+  transform: rotate(0deg);
+}
+
+details > :not(summary) {
+  margin-bottom: var(--space-4);
+}
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {

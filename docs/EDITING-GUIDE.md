@@ -14,6 +14,7 @@ This guide is for committee members. You don't need to know anything about code 
 2. Choose **eaglesham-community**.
 3. On the left you'll see:
    - **Pages**: The plan, About, Our view, Privacy, Accessibility
+   - **How to respond page**: the steps, and the questions and answers at the bottom
    - **The three sites**: one entry for each site
    - **The big issues**: traffic, wildlife, infrastructure
    - **Response helper points**: the points residents can tick on "How to respond"
