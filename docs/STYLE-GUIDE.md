@@ -218,6 +218,10 @@ Apply it with `:focus-visible`. Never remove outlines without replacing them.
 
 **Key facts.** A Harl panel containing a `<dl>`. Terms in Atkinson bold, values in regular weight.
 
+**Highlighted section.** A Harl panel with a 1px Rule border, used to make one section of a Markdown page stand out (for example "Where we are now" on The plan). In Markdown, put `<div class="panel">` and `</div>` around the section, with an empty line on each side. Use it sparingly, and never for opinion (that's the "Our view" callout).
+
+**Draft gaps (TODO).** Any paragraph or list item in a Markdown page containing "TODO" gets a 2px dashed Stone outline automatically at build time, so unfinished text is easy to spot. This is a working aid, not a design element: every TODO should be gone before launch.
+
 **Callout: "From the plan".** A quotation from LDP3 or another official document. Harl background, 4px Stone left border, the quote in body text, and a source line beneath ("Proposed LDP3, page 47"). Use `<blockquote>` with `<cite>`.
 
 **Callout: "Our view".** The group's opinion. Harl background, 4px Orry left border, with a heading reading "Our view" in Atkinson bold. Opinions on the site must sit inside this callout or on the Our view page.

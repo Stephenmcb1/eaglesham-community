@@ -227,6 +227,12 @@ const fallbackText = `${description} ${siteInfo.map((s) => s.name + s.homes).joi
 
   /* ---------- The interactive map ---------- */
   .map {
+    /*
+      Leaflet gives its layers and buttons z-index values up to 1000. "isolation"
+      keeps all of those inside the map, so the whole map stays below the sticky
+      header when you scroll instead of sliding over it.
+    */
+    isolation: isolate;
     height: var(--map-height-mobile);
     border: var(--border-thin) solid var(--colour-rule);
     font-family: var(--font-body);
